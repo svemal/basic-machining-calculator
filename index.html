@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Machining Calculator</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: system-ui, -apple-system, sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      width: 100%;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0 0 24px 0;
+      text-align: center;
+      color: #ffffff;
+    }
+
+    .page {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    .page-heading {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .page-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    .page-description {
+      font-size: 14px;
+      color: #aaa;
+      margin: 2px 0 8px 0;
+      line-height: 1.4;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    label {
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    input {
+      width: 80%;
+      min-height: 48px;
+      background: #1e1e1e;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 12px;
+      color: #fff;
+      font-size: 18px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #4da6ff;
+    }
+
+    .calc-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20%;
+      min-height: 48px;
+      background: #1e1e1e;
+      border: 1px solid #444;
+      border-radius: 8px;
+      color: #4da6ff;
+      cursor: pointer;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .calc-btn:active {
+      background: #2a2a2a;
+    }
+
+    .calc-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .page-action {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 20px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      background: #4da6ff;
+      color: #ffffff;
+      font: inherit;
+      font-size: 16px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .page-action:active {
+      background: #2a2a2a;
+    }
+
+    input[readonly] {
+      color: #4da6ff;
+      font-weight: bold;
+      background: unset;
+    }
+
+    /* Hamburger button */
+    .menu-button {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 56px;
+      height: 56px;
+      border: none;
+      border-radius: 50%;
+      background: #4da6ff;
+      color: #ffffff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .menu-button:active {
+      transform: scale(0.96);
+    }
+
+    .hamburger {
+      width: 24px;
+      height: 18px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      border-radius: 2px;
+      background: #fff;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .menu-button.open .hamburger span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu-button.open .hamburger span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-button.open .hamburger span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    /* Right-side menu */
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      z-index: 999;
+    }
+
+    .menu-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: min(320px, 86vw);
+      height: 100vh;
+      height: 100dvh;
+      padding: 28px 20px 100px;
+      background: #1b1b1b;
+      border-left: 1px solid #333;
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+      z-index: 1000;
+      box-shadow: -8px 0 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .side-menu.open {
+      transform: translateX(0);
+    }
+
+    .menu-section {
+      margin-bottom: 22px;
+    }
+
+    .menu-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .menu-header {
+      padding: 0 12px 8px;
+      color: #888;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .menu-item {
+      width: 100%;
+      display: block;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #e0e0e0;
+      text-align: left;
+      font: inherit;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .menu-item:hover,
+    .menu-item.active {
+      background: #2a2a2a;
+      color: #4da6ff;
+    }
+
+    .menu-item:active {
+      background: #333;
+    }
+
+    .placeholder {
+      margin-bottom:50px;
+      padding: 16px;
+      border: 1px dashed #444;
+      border-radius: 8px;
+      color: #888;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      .menu-button {
+        right: 16px;
+        bottom: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Machining Calculator</h1>
+
+  <!-- SVG Icon Definition for Calculator -->
+  <svg style="display: none;">
+    <symbol id="icon-calc" viewBox="0 0 24 24">
+      <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5V4h14v16zM7 6h10v4H7V6zm1 6h2v2H8v-2zm0 4h2v2H8v-2zm4-4h2v2h-2v-2zm0 4h2v2h-2v-2zm4-4h2v6h-2v-6z"/>
+    </symbol>
+  </svg>
+
+  <div id="data" style="display:none" data-calltree="[]"></div>
+
+  <!-- General: Speed -->
+  <div id="p-speed" class="page active">
+    <div class="page-title">Speed</div>
+
+    <div class="field">
+      <label>Cutter diameter (mm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="dia" id="sp_dia" oninput="recalcSpeed('dia', event)" placeholder="80">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Cutting speed (m/min)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mMin" id="sp_mmin" placeholder="0" oninput="recalcSpeed('mmin', event)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Spindle speed (RPM)</label>
+      <div class="input-group">
+        <input type="number" data-holds="rpm" id="sp_rpm" placeholder="0" oninput="recalcSpeed('rpm', event)">
+      </div>
+    </div>
+    <button id="speed-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+  </div>
+
+  <!-- General: Feed -->
+  <div id="p-feed" class="page">
+    <div class="page-title">Feed</div>
+
+    <div class="field">
+      <label>Spindle speed (RPM)</label>
+      <div class="input-group">
+        <input type="number" data-holds="rpm" id="fe_rpm" oninput="recalcFeed('rpm', event)" placeholder="1000">
+        <button type="button" class="calc-btn" onclick="calculate('p-feed','p-speed','feed')" aria-label="Calculate Spindle Speed"><svg><use href="#icon-calc"/></svg></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Feed rate (mm/min)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mmMin" id="fe_mmmin" placeholder="0" oninput="recalcFeed('mmmin', event)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Feed per revolution (mm/rev)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mmRev" id="fe_mmrev" placeholder="0" oninput="recalcFeed('mmrev', event)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Number of cutting edges</label>
+      <div class="input-group">
+        <input type="number" data-holds="Teeth" id="fe_teeth" min="1" max="20" placeholder="6" oninput="recalcFeed('fe_teeth', event)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Feed per tooth (fz)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mmTooth" id="fe_mmtooth" placeholder="0" oninput="recalcFeed('fe_mmtooth', event)">
+      </div>
+    </div>
+    <button id="feed-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+  </div>
+
+  <!-- General: Cutting time - Basic -->
+  <div id="p-cutting-time" class="page">
+    <div class="page-heading">
+      <div class="page-title">Cutting time</div>
+    </div>
+
+    <div class="field">
+      <label>Feed rate (mm/min)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mmMin" id="ct_basic_feed" min="0" oninput="recalcCuttingTimeBasic(event)" placeholder="100">
+        <button type="button" class="calc-btn" onclick="calculate('p-cutting-time','p-feed','cutting time')" aria-label="Calculate Feed Rate"><svg><use href="#icon-calc"/></svg></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Cutting length (mm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="length" id="ct_basic_length" min="0" oninput="recalcCuttingTimeBasic(event)" placeholder="100">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Number of passes</label>
+      <div class="input-group">
+        <input type="number" data-holds="passes" id="ct_basic_passes" min="1" step="1" oninput="recalcCuttingTimeBasic(event)" placeholder="1">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Cutting time (hh:mm:ss)</label>
+      <div class="input-group">
+        <input type="text" data-holds="cutTime" id="ct_basic_result" placeholder="00:00:00" readonly>
+      </div>
+    </div>
+    <button id="cutting-time-basic-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+  </div>
+
+  <!-- Milling: Material Removal Rate -->
+  <div id="p-milling-mrr" class="page">
+    <div class="page-title">Milling — Material Removal Rate</div>
+
+    <div class="field">
+      <label>Cut width (mm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="width" id="mmr_width" min="0" oninput="recalcMillingMRR(event)" placeholder="20">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Cut depth (mm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="depth" id="mmr_depth" min="0" oninput="recalcMillingMRR(event)" placeholder="2">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Feed rate (mm/min)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mmMin" id="mmr_feed" min="0" oninput="recalcMillingMRR(event)" placeholder="100">
+        <button type="button" class="calc-btn" onclick="calculate('p-milling-mrr','p-feed','material removal rate')" aria-label="Calculate Feed Rate"><svg><use href="#icon-calc"/></svg></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Material removal rate (cm³/min)</label>
+      <div class="input-group">
+        <input type="number" data-holds="millMRR" id="mill_mrr_result" placeholder="0" readonly>
+      </div>
+    </div>
+    <button id="milling-mrr-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+  </div>
+
+  <!-- Turning: Material Removal Rate -->
+  <div id="p-turning-mrr" class="page">
+    <div class="page-title">Turning — Material Removal Rate</div>
+
+    <div class="field">
+      <label>Radial depth of cut (mm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="radAp" id="tmr_ap" min="0" max="10" oninput="recalcTurningMRR(event)" placeholder="2">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Cutting speed (m/min)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mMin" id="tmr_mmin" min="0" oninput="recalcTurningMRR(event)" placeholder="1000">
+        <button type="button" class="calc-btn" onclick="calculate('p-turning-mrr','p-speed','material removal rate')" aria-label="Calculate Spindle Speed"><svg><use href="#icon-calc"/></svg></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Feed per revolution (mm/rev)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mmRev" id="tmr_feed" min="0" oninput="recalcTurningMRR(event)" placeholder="0.2">
+        <button type="button" class="calc-btn" onclick="calculate('p-turning-mrr','p-feed','material removal rate')" aria-label="Calculate Feed per Rev"><svg><use href="#icon-calc"/></svg></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Material removal rate (cm³/min)</label>
+      <div class="input-group">
+        <input type="number" data-holds="turnMRR" id="turn_mrr_result" placeholder="0" readonly>
+      </div>
+    </div>
+    <button id="turning-mrr-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+  </div>
+
+  <!-- Turning: Surface Finish -->
+  <div id="p-surface-finish" class="page">
+    <div class="page-title">Turning — Surface Finish</div>
+
+    <div class="field">
+      <label>Feed per revolution (mm/rev)</label>
+      <div class="input-group">
+        <input type="number" data-holds="mmRev" id="sf_feed" min="0" oninput="recalcSurfaceFinish(event)" placeholder="0.1">
+        <button type="button" class="calc-btn" onclick="calculate('p-surface-finish','p-feed','surface finish')" aria-label="Calculate Feed per Rev"><svg><use href="#icon-calc"/></svg></button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Tool nose radius (mm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="cutRad" id="sf_radius" min="0" oninput="recalcSurfaceFinish(event)" placeholder="0.8">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Theoretical Ra (µm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="surfaceRa" id="sf_ra" placeholder="0" readonly>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Theoretical Rmax (µm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="surfaceRmax" id="sf_rmax" placeholder="0" readonly>
+      </div>
+    </div>
+    <button id="surface-finish-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <div class="placeholder">
+      Based on the ideal geometric surface profile for a turning tool nose radius.
+      Actual surface finish can differ due to vibration, tool wear, material, machine condition, and other factors.
+    </div>
+  </div>
+
+  <!-- Drilling: Drill depth conversion -->
+  <div id="p-drill-depth" class="page">
+    <div class="page-title">Drilling — Drill depth conversion</div>
+
+    <div class="field">
+      <label>Drill diameter (mm)</label>
+      <div class="input-group">
+        <input type="number" data-holds="drillDia" id="dd_diameter" min="0" oninput="recalcDrillDepth(event)" placeholder="10">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Drill tip angle (°)</label>
+      <div class="input-group">
+        <input type="number" id="dd_angle" min="1" max="179" oninput="recalcDrillDepth(event)" placeholder="140">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Nominal hole depth</label>
+      <div class="input-group">
+        <input type="number" id="dd_nominal" min="0" oninput="recalcDrillDepth(event)" placeholder="20">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Tip to full diameter (mm)</label>
+      <div class="input-group">
+        <input type="number" id="dd_distance" placeholder="0" readonly>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>If nominal depth is full dia, tip is</label>
+      <div class="input-group">
+        <input type="number" id="dd_total_tip" placeholder="0" readonly>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>If Nominal depth is tip, full dia is</label>
+      <div class="input-group">
+        <input type="number" id="dd_total_dia" placeholder="0" readonly>
+      </div>
+    </div>
+
+    <button id="drill-depth-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <div class="placeholder">
+      Calculates the drill-point depth and the total depth needed to obtain the specified straight cylindrical hole depth.
+    </div>
+  </div>
+
+  <!-- Menu -->
+  <div id="menuOverlay" class="menu-overlay" onclick="closeMenu()"></div>
+
+  <aside id="sideMenu" class="side-menu" aria-label="Calculator menu">
+    <div class="menu-section">
+      <div class="menu-header">General</div>
+      <button class="menu-item active" data-ref="p-speed" onclick="switchPage('p-speed')">Speed</button>
+      <button class="menu-item" data-ref="p-feed" onclick="switchPage('p-feed')">Feed</button>
+      <button class="menu-item" data-ref="p-cutting-time" onclick="switchPage('p-cutting-time')">Cutting time</button>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-header">Milling</div>
+      <button class="menu-item" data-ref="p-milling-mrr" onclick="switchPage('p-milling-mrr')">Material Removal Rate</button>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-header">Turning</div>
+      <button class="menu-item" data-ref="p-turning-mrr" onclick="switchPage('p-turning-mrr')">Material Removal Rate</button>
+      <button class="menu-item" data-ref="p-surface-finish" onclick="switchPage('p-surface-finish')">Surface Finish</button>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-header">Drilling</div>
+      <button class="menu-item" data-ref="p-drill-depth" onclick="switchPage('p-drill-depth')">Drill depth</button>
+    </div>
+  </aside>
+
+  <button
+    id="menuButton"
+    class="menu-button"
+    type="button"
+    aria-label="Open calculator menu"
+    aria-expanded="false"
+    onclick="toggleMenu()"
+  >
+    <span class="hamburger" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+  </button>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('menuOverlay');
+      const button = document.getElementById('menuButton');
+
+      const isOpen = menu.classList.toggle('open');
+      overlay.classList.toggle('open', isOpen);
+      button.classList.toggle('open', isOpen);
+      button.setAttribute('aria-expanded', isOpen);
+      button.setAttribute('aria-label', isOpen ? 'Close calculator menu' : 'Open calculator menu');
+    }
+
+    function closeMenu() {
+      const menu = document.getElementById('sideMenu');
+      const overlay = document.getElementById('menuOverlay');
+      const button = document.getElementById('menuButton');
+
+      menu.classList.remove('open');
+      overlay.classList.remove('open');
+      button.classList.remove('open');
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', 'Open calculator menu');
+    }
+
+    function switchPage(pageId, auto = false) {
+      const current = document.querySelector(".page.active").id;
+      if (current === pageId) {
+        closeMenu();
+        return;
+      } else if (!auto) {
+        document.querySelectorAll(".page-action").forEach(btn => btn.hidden = true);
+        document.querySelector("#data").dataset.calltree = "[]";
+      }
+
+      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.ref === pageId);
+      });
+
+      document.getElementById(pageId).classList.add('active');
+      closeMenu();
+    }
+
+    function calculate(caller, target, str) {
+      let dataElement = document.querySelector("#data");
+      let tempArr = JSON.parse(dataElement.dataset.calltree);
+      tempArr.push(JSON.stringify({ caller, target, text: str }));
+      dataElement.dataset.calltree = JSON.stringify(tempArr);
+
+      document.querySelectorAll(".page-action").forEach(btn => {
+        btn.hidden = false;
+        btn.innerText = `Return to ${str}`;
+      });
+
+      switchPage(target, true);
+    }
+
+    function returnCalc() {
+      let dataElement = document.querySelector("#data");
+      let tempArr = JSON.parse(dataElement.dataset.calltree);
+      if (tempArr.length === 0) return;
+
+      let lastEntry = JSON.parse(tempArr.pop());
+      dataElement.dataset.calltree = JSON.stringify(tempArr);
+
+      switchPage(lastEntry.caller, true);
+
+      let pageActions = document.querySelectorAll(".page-action");
+      let remainingEntry = tempArr.at(-1);
+
+      if (!remainingEntry) {
+        pageActions.forEach(btn => btn.hidden = true);
+      } else {
+        let parsed = JSON.parse(remainingEntry);
+        pageActions.forEach(btn => {
+          btn.hidden = false;
+          btn.innerText = `Return to ${parsed.text}`;
+        });
+      }
+    }
+
+    /* Automatic data-holds field synchronization */
+    document.addEventListener('input', function(e) {
+      const key = e.target.dataset.holds;
+      if (!key) return;
+
+      const value = e.target.value;
+      const sourcePage = e.target.closest('.page')?.id;
+
+      const detail = e.detail?.calculatorEvent ? e.detail : null;
+      const visitedPages = Array.isArray(detail?.visitedPages)
+        ? detail.visitedPages
+        : (sourcePage ? [sourcePage] : []);
+
+      const matchingInputs =
+        document.querySelectorAll(`input[data-holds="${key}"]`);
+
+      matchingInputs.forEach(input => {
+        if (input === e.target) return;
+        if (input.value === value) return;
+
+        input.value = value;
+
+        const targetPage = input.closest('.page')?.id;
+        const alreadyVisited =
+          targetPage && visitedPages.includes(targetPage);
+
+        const nextVisitedPages =
+          targetPage && !alreadyVisited
+            ? [...visitedPages, targetPage]
+            : visitedPages;
+
+        input.dispatchEvent(new CustomEvent('input', {
+          bubbles: false,
+          detail: {
+            calculatorEvent: true,
+            recalculate: !alreadyVisited,
+            visitedPages: nextVisitedPages
+          }
+        }));
+      });
+    });
+
+    function formatTime(totalMinutes) {
+      if (!Number.isFinite(totalMinutes) || totalMinutes < 0) return '';
+
+      const totalSeconds = Math.round(totalMinutes * 60);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      const hh = String(hours).padStart(2, '0');
+      const mm = String(minutes).padStart(2, '0');
+      const ss = String(seconds).padStart(2, '0');
+
+      return `${hh}:${mm}:${ss}`;
+    }
+
+    function setCalculatedValue(id, value) {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const placeholder = el.placeholder.trim();
+      const calculated = String(value).trim();
+
+      let matchesPlaceholder = false;
+      if (calculated.includes(':')) {
+        matchesPlaceholder = (placeholder === calculated);
+      } else {
+        const placeholderNumber = parseFloat(placeholder);
+        const calculatedNumber = parseFloat(calculated);
+        matchesPlaceholder =
+          placeholder !== '' &&
+          Number.isFinite(placeholderNumber) &&
+          Number.isFinite(calculatedNumber) &&
+          placeholderNumber === calculatedNumber;
+      }
+
+      el.value = matchesPlaceholder ? '' : value;
+
+      if (el.dataset.holds) {
+        const page = el.closest('.page')?.id;
+        el.dispatchEvent(new CustomEvent('input', {
+          bubbles: true,
+          detail: {
+            calculatorEvent: true,
+            recalculate: false,
+            visitedPages: page ? [page] : []
+          }
+        }));
+      }
+    }
+
+    function getInputValue(id) {
+      const el = document.getElementById(id);
+      if (!el) return NaN;
+      const value = el.value.trim();
+      const fallback = el.placeholder;
+      const number = parseFloat(value !== '' ? value : fallback);
+      return Number.isNaN(number) ? NaN : number;
+    }
+
+    function syncValue(element) {
+      const key = element.dataset.holds;
+      if (!key) return;
+      document.querySelectorAll(`input[data-holds="${key}"]`).forEach(input => {
+        if (input !== element && input.value !== element.value) {
+          input.value = element.value;
+          input.dispatchEvent(new Event('input', { bubbles: false }));
+        }
+      });
+    }
+
+    function recalcSpeed(source, event) {
+      if (event?.detail?.calculatorEvent &&
+          event.detail.recalculate === false) return;
+
+      const dia = getInputValue('sp_dia');
+      const mMin = getInputValue('sp_mmin');
+      const rpm = getInputValue('sp_rpm');
+
+      if (source === 'dia' || source === 'mmin') {
+        if (Number.isFinite(dia) && Number.isFinite(mMin) && dia !== 0) {
+          setCalculatedValue(
+            'sp_rpm',
+            (1000 * mMin / (Math.PI * dia)).toFixed(0)
+          );
+        }
+      } else if (source === 'rpm') {
+        if (Number.isFinite(dia) && Number.isFinite(rpm)) {
+          setCalculatedValue(
+            'sp_mmin',
+            (Math.PI * dia * rpm / 1000).toFixed(0)
+          );
+        }
+      }
+    }
+
+    function recalcFeed(source, event) {
+      if (event?.detail?.calculatorEvent &&
+          event.detail.recalculate === false) return;
+
+      const rpm = getInputValue('fe_rpm');
+      const mmMin = getInputValue('fe_mmmin');
+      let mmRev = getInputValue('fe_mmrev');
+      const teeth = getInputValue('fe_teeth');
+      const mmTooth = getInputValue('fe_mmtooth');
+
+      if (source === 'rpm') {
+        if (Number.isFinite(rpm) && Number.isFinite(mmRev)) {
+          setCalculatedValue('fe_mmmin', (rpm * mmRev).toFixed(0));
+        }
+      } else if (source === 'mmmin') {
+        if (Number.isFinite(mmMin) && Number.isFinite(rpm) && rpm !== 0) {
+          const calcMmRev = mmMin / rpm;
+          setCalculatedValue('fe_mmrev', calcMmRev.toFixed(3));
+          if (Number.isFinite(teeth) && teeth !== 0) {
+            setCalculatedValue('fe_mmtooth', (calcMmRev / teeth).toFixed(3));
+          }
+        }
+      } else if (source === 'mmrev') {
+        if (Number.isFinite(mmRev) && Number.isFinite(rpm)) {
+          setCalculatedValue('fe_mmmin', (rpm * mmRev).toFixed(0));
+        }
+        if (Number.isFinite(mmRev) && Number.isFinite(teeth) && teeth !== 0) {
+          setCalculatedValue('fe_mmtooth', (mmRev / teeth).toFixed(3));
+        }
+      } else if (source === 'fe_mmtooth') {
+        if (Number.isFinite(mmTooth) && Number.isFinite(teeth)) {
+          const calcMmRev = mmTooth * teeth;
+          setCalculatedValue('fe_mmrev', calcMmRev.toFixed(3));
+          if (Number.isFinite(rpm)) {
+            setCalculatedValue('fe_mmmin', (rpm * calcMmRev).toFixed(0));
+          }
+        }
+      } else if (source === 'fe_teeth') {
+        if (Number.isFinite(mmTooth) && Number.isFinite(teeth)) {
+          const calcMmRev = mmTooth * teeth;
+          setCalculatedValue('fe_mmrev', calcMmRev.toFixed(3));
+          if (Number.isFinite(rpm)) {
+            setCalculatedValue('fe_mmmin', (rpm * calcMmRev).toFixed(0));
+          }
+        } else if (Number.isFinite(mmRev) && Number.isFinite(teeth) && teeth !== 0) {
+          setCalculatedValue('fe_mmtooth', (mmRev / teeth).toFixed(3));
+        }
+      }
+
+      // Keep downstream dependents (e.g. cutting time basic) updated
+      recalcCuttingTimeBasic();
+    }
+
+    function recalcCuttingTimeBasic(event) {
+      if (event?.detail?.calculatorEvent &&
+          event.detail.recalculate === false) return;
+
+      const feed = getInputValue('ct_basic_feed');
+      const length = getInputValue('ct_basic_length');
+      const passes = getInputValue('ct_basic_passes');
+      const result = document.getElementById('ct_basic_result');
+
+      if (Number.isFinite(feed) && Number.isFinite(length) &&
+          Number.isFinite(passes) && feed > 0) {
+        const timeInMinutes = (length * passes) / feed;
+        setCalculatedValue('ct_basic_result', formatTime(timeInMinutes));
+      } else {
+        result.value = '';
+      }
+    }
+
+    function recalcMillingMRR(event) {
+      if (event?.detail?.calculatorEvent &&
+          event.detail.recalculate === false) return;
+
+      const width = getInputValue('mmr_width');
+      const depth = getInputValue('mmr_depth');
+      const feed = getInputValue('mmr_feed');
+      const result = document.getElementById('mill_mrr_result');
+
+      if (Number.isFinite(width) && Number.isFinite(depth) &&
+          Number.isFinite(feed)) {
+        // mm³/min -> cm³/min
+        setCalculatedValue('mill_mrr_result', (width * depth * feed / 1000).toFixed(1));
+      } else {
+        result.value = '';
+      }
+    }
+
+    function recalcTurningMRR(event) {
+      if (event?.detail?.calculatorEvent &&
+          event.detail.recalculate === false) return;
+
+      const ap = getInputValue('tmr_ap');
+      const speed = getInputValue('tmr_mmin');
+      const feed = getInputValue('tmr_feed');
+      const result = document.getElementById('turn_mrr_result');
+
+      if (Number.isFinite(ap) && Number.isFinite(speed) &&
+          Number.isFinite(feed)) {
+        // ap (mm) * feed (mm/rev) * speed (m/min) yields cm³/min directly.
+        setCalculatedValue('turn_mrr_result', (ap * feed * speed).toFixed(1));
+      } else {
+        result.value = '';
+      }
+    }
+
+    function recalcSurfaceFinish(event) {
+      if (event?.detail?.calculatorEvent &&
+          event.detail.recalculate === false) return;
+
+      const feed = getInputValue('sf_feed');
+      const radius = getInputValue('sf_radius');
+      const ra = document.getElementById('sf_ra');
+      const rmax = document.getElementById('sf_rmax');
+
+      if (Number.isFinite(feed) && Number.isFinite(radius) && radius > 0) {
+        // Geometric turning formulas, converted from mm to µm.
+        setCalculatedValue('sf_ra', (feed * feed / (32 * radius) * 1000).toFixed(2));
+        setCalculatedValue('sf_rmax', (feed * feed / (8 * radius) * 1000).toFixed(2));
+      } else {
+        ra.value = '';
+        rmax.value = '';
+      }
+    }
+
+    function recalcDrillDepth(event) {
+      if (event?.detail?.calculatorEvent &&
+          event.detail.recalculate === false) return;
+
+      const diameter = getInputValue('dd_diameter');
+      const angle = getInputValue('dd_angle');
+      const nominal = getInputValue('dd_nominal');
+
+      const distance = document.getElementById('dd_distance');
+      const totalTip = document.getElementById('dd_total_tip');
+      const totalDia = document.getElementById('dd_total_dia');
+
+      if (Number.isFinite(diameter) && Number.isFinite(angle) &&
+          Number.isFinite(nominal) && diameter >= 0 && angle > 0 && angle < 180) {
+        const tipDistance =
+          (diameter / 2) / Math.tan((angle / 2) * Math.PI / 180);
+
+        setCalculatedValue('dd_distance', tipDistance.toFixed(2));
+        setCalculatedValue('dd_total_tip', (nominal + tipDistance).toFixed(2));
+        setCalculatedValue('dd_total_dia', (nominal - tipDistance).toFixed(2));
+      } else {
+        distance.value = '';
+        totalTip.value = '';
+        totalDia.value = '';
+      }
+    }
+
+    // Event registration for Cutting Time section to catch cross-tab syncs
+    document.querySelectorAll('#p-cutting-time input').forEach(input => {
+      input.addEventListener('input', recalcCuttingTimeBasic);
+    });
+
+    // Initialize calculated fields
+    recalcCuttingTimeBasic();
+    recalcMillingMRR();
+    recalcTurningMRR();
+    recalcSurfaceFinish();
+    recalcDrillDepth();
+
+    // Select the current numeric value when the user focuses/clicks an input.
+    document.addEventListener('focusin', function(event) {
+      const input = event.target;
+      if (input.matches('input') && input.value !== '') {
+        requestAnimationFrame(() => input.select());
+      }
+    });
+
+    document.addEventListener('click', function(event) {
+      const input = event.target;
+      if (input.matches('input') && input.value !== '') {
+        requestAnimationFrame(() => input.select());
+      }
+    });
+
+    // Close menu with Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeMenu();
+      }
+    });
+  </script>
+</body>
+</html>
