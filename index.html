@@ -56,7 +56,7 @@
       margin: 0;
       line-height: 1.4;
     }
-	
+
 	.input-group label {
 		width: 100px;
 	}
@@ -143,7 +143,7 @@
       font-weight: bold;
       background: unset;
     }
-	
+
 	/* Inline alignment for Title & Info Button */
 .page-heading-row {
   display: flex;
@@ -261,7 +261,7 @@
   border-radius: 4px;
   font-size: 13px;
 }
-	
+
 	/* Scroll wrapper for small devices */
 	  .table-container {
 		width: 100%;
@@ -313,7 +313,7 @@
 
 	  /* Adjust spacing on small phone screens */
 	  @media (max-width: 480px) {
-		.tap-table th, 
+		.tap-table th,
 		.tap-table td {
 		  padding: 8px 12px;
 		  font-size: 13px;
@@ -464,7 +464,7 @@
       color: #888;
       line-height: 1.5;
     }
-	
+
 	.version-footer {
 	  margin-top: auto; /* Pushes footer to the bottom of the flex container */
 	  padding-top: 16px;
@@ -490,7 +490,7 @@
         right: 16px;
         bottom: 16px;
       }
-	  input { 
+	  input {
 		width: 100%
 	  }
 	  .page-action {
@@ -617,7 +617,7 @@
     </div>
     <button id="cutting-time-basic-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
   </div>
-  
+
     <!-- General: Trigonometry -->
 	<div id="p-trigonometry" class="page">
 		<div class="page-heading-row">
@@ -627,21 +627,21 @@
 			</div>
 			<button type="button" class="info-btn" onclick="openModal('trig-info-modal')" aria-label="Information">i</button>
 		</div>
-	
+
 		<!-- Right Triangle Diagram -->
 		<div class="trig-diagram-container">
 		  <svg class="trig-svg" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
 			<!-- Triangle Path (C is the 90° right angle at origin [40, 140]) -->
 			<polygon points="40,140 260,140 40,30" fill="none" stroke="#4da6ff" stroke-width="2.5" stroke-linejoin="round" />
-			
+
 			<!-- Right Angle Symbol at Corner C -->
 			<path d="M 40,122 L 58,122 L 58,140" fill="none" stroke="#4da6ff" stroke-width="1.5" />
-			
+
 			<!-- Corner Labels (Vertices) -->
 			<text x="24" y="152" fill="#ffffff" font-weight="bold" font-size="15">C</text>
 			<text x="272" y="152" fill="#ffffff" font-weight="bold" font-size="15">B</text>
 			<text x="24" y="24" fill="#ffffff" font-weight="bold" font-size="15">A</text>
-			
+
 			<!-- Side Labels -->
 			<text x="22" y="90" fill="#aaaaaa" font-size="14" text-anchor="end">b</text>
 			<text x="140" y="160" fill="#aaaaaa" font-size="14" text-anchor="middle">a</text>
@@ -652,27 +652,27 @@
 		<!-- Trigonometry Calculation Inputs -->
 		<div class="input-group">
 		  <label for="trig_a">Side a</label>
-		  <input type="text" inputmode="decimal" class="trigInput" id="trig_a" oninput="recalcTrigonometry(this)" placeholder="4">
+		  <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_a" oninput="recalcTrigonometry(this)" placeholder="4">
 		</div>
 
 		<div class="input-group">
 		  <label for="trig_b">Side b</label>
-		  <input type="text" inputmode="decimal" class="trigInput" id="trig_b" oninput="recalcTrigonometry(this)" placeholder="3">
+		  <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_b" oninput="recalcTrigonometry(this)" placeholder="3">
 		</div>
 
 		<div class="input-group">
 		  <label for="trig_c">Side c</label>
-		  <input type="text" inputmode="decimal" class="trigInput" id="trig_c" oninput="recalcTrigonometry(this)" placeholder="5">
+		  <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_c" oninput="recalcTrigonometry(this)" placeholder="5">
 		</div>
 
 		<div class="input-group">
 		  <label for="trig_angle_a">Angle A (°)</label>
-		  <input type="text" inputmode="decimal" class="trigInput" id="trig_angle_a" oninput="recalcTrigonometry(this)" placeholder="60">
+		  <input type="text" inputmode="decimal" class="trigInput trigAngle" id="trig_angle_a" oninput="recalcTrigonometry(this)" placeholder="60">
 		</div>
 
 		<div class="input-group">
 		  <label for="trig_angle_b">Angle B (°)</label>
-		  <input type="text" inputmode="decimal" class="trigInput" id="trig_angle_b" oninput="recalcTrigonometry(this)" placeholder="30">
+		  <input type="text" inputmode="decimal" class="trigInput trigAngle" id="trig_angle_b" oninput="recalcTrigonometry(this)" placeholder="30">
 		</div>
 	</div>
 
@@ -837,7 +837,7 @@
       Calculates the drill-point depth and the total depth needed to obtain the specified straight cylindrical hole depth.
     </div>
   </div>
-  
+
 	<div id="p-tapping-metric" class="page">
 		<div class="page-heading">
 			<div class="page-title">Thread table - Metric</div>
@@ -877,7 +877,7 @@
 		  </table>
 		</div>
 	</div>
-  
+
 	<div id="p-tapping-bsp" class="page">
 		<div class="page-heading">
 			<div class="page-title">Thread table - BSP</div>
@@ -941,13 +941,13 @@
       <div class="menu-header">Drilling</div>
       <button class="menu-item" data-ref="p-drill-depth" onclick="switchPage('p-drill-depth')">Drill depth</button>
     </div>
-	
+
 	<div class="menu-section">
       <div class="menu-header">Threads</div>
       <button class="menu-item" data-ref="p-tapping-metric" onclick="switchPage('p-tapping-metric')">Thread table - Metric</button>
 	  <button class="menu-item" data-ref="p-tapping-bsp" onclick="switchPage('p-tapping-bsp')">Thread table - BSP</button>
     </div>
-	
+
 	<div class="version-footer">v0.4 - by svemal</div>
   </aside>
 
@@ -958,7 +958,7 @@
       <span></span>
     </span>
   </button>
-  
+
   <!-- Modal Overlay (Can be placed at bottom of <body>) -->
 	<div id="trig-info-modal" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'trig-info-modal')">
 	  <div class="modal-content">
@@ -1060,7 +1060,7 @@
         });
       }
     }
-	
+
 	function openModal(modalId) {
   const modal = document.getElementById(modalId);
   if (modal) modal.classList.add('active');
@@ -1179,7 +1179,7 @@ function closeModalOnBackdrop(event, modalId) {
 		}));
 	  }
 	}
-	
+
 	// Force dot as decimal separator ("12,34" -> "12.34")
 	function formatDecimal(val) {
 	  if (val === null || val === undefined || val === '') return '';
@@ -1301,7 +1301,7 @@ function closeModalOnBackdrop(event, modalId) {
         result.value = '';
       }
     }
-	
+
 	function recalcTrigonometry(input) {
 		//1. add userValue-class if user input a value. Remove if user cleared value
 		if (input.value != '') {
@@ -1309,31 +1309,95 @@ function closeModalOnBackdrop(event, modalId) {
 		} else {
 			input.classList.remove("userValue");
 		}
-		
+
 		let outputs = [];
-		
+
 		//2. Get all trigonometry inputs. If 2 has userValue tag, make rest readonly
 		const allInputs = document.querySelectorAll(".trigInput");
+		const allSides = document.querySelectorAll(".trigSide");
+        const allAngles = document.querySelectorAll(".trigAngle");
+
 		let userValues = document.querySelectorAll(".userValue");
-		if (userValues.length == 2) {
+		if (userValues.length == 1 && input.classList.contains("trigAngle")) {
+            for (let i = 0; i < allAngles.length; i++) {
+              if (allAngles[i].id != input.id) {
+                allAngles[i].readOnly = true;
+              }
+            }
+		} else if (userValues.length == 2) {
 			for (let i = 0; i < allInputs.length; i++) {
 				if (allInputs[i].classList.contains("userValue") == false) {
 					//store as an output
 					outputs.push(allInputs[i]);
-					//not user input. Set readonly
+                    //not user input. Set readonly
 					allInputs[i].readOnly = true;
 				}
 			}
 		} else {
 			for (let i = 0; i < allInputs.length; i++) {
 				//Inadequate user inputs. Remove readonly
+				if (allInputs[i].readOnly) { allInputs[i].value = '' }
 				allInputs[i].readOnly = false;
 			}
 		}
-		
+
 		//3. UI has been handled. Sort all inputs and outputs.
-		
+		if (outputs.length == 0) {
+          return; //Inadequate amount of values
+		}
+		//if 1 angle was entered, calculate second angle
+		const legA = document.querySelector("#trig_a");
+        const legB = document.querySelector("#trig_b");
+        const hypo = document.querySelector("#trig_c");
+        const angA = document.querySelector("#trig_angle_a");
+        const angB = document.querySelector("#trig_angle_b");
+
+		if (document.querySelector(".trigAngle.userValue") != null) {
+            //1 angle given, find the remaining
+            let secondAngle = 90 - document.querySelector(".trigAngle.userValue").value;
+            document.querySelector(".trigAngle[readonly]").value = secondAngle;
+
+            //we now have all angles and 1 side
+            if (legA.classList.contains("userValue")) { //legA was given value
+              legB.value = (legA.value * Math.tan(toRadians(angB.value))).toFixed(3)
+              hypo.value = (legA.value / Math.cos(toRadians(angB.value))).toFixed(3)
+            } else if (legB.classList.contains("userValue")) { //legB was given value
+              legA.value = (legB.value * Math.tan(toRadians(angA.value))).toFixed(3)
+              hypo.value = (legB.value / Math.cos(toRadians(angA.value))).toFixed(3)
+            } else { //hypotenuse was given value
+              legA.value = (hypo.value * Math.sin(toRadians(angA.value))).toFixed(3)
+              legB.value = (hypo.value * Math.sin(toRadians(angB.value))).toFixed(3)
+            }
+		} else {
+          //no angle was entered
+          if (hypo.readOnly) {
+            //We have both legs, use tan to find and an angle
+            angA.value = toDegrees(Math.atan(legA.value / legB.value)).toFixed(2)
+            angB.value = toDegrees(Math.atan(legB.value / legA.value)).toFixed(2)
+            hypo.value = Math.sqrt(Math.pow(legA.value,2) + Math.pow(legB.value,2)).toFixed(3)
+          } else if (legA.readOnly) {
+            //We have hypo and legB. Use cos to find leg A and angles
+            angA.value = toDegrees(Math.acos(legB.value / hypo.value)).toFixed(2)
+            angB.value = toDegrees(Math.asin(legB.value / hypo.value)).toFixed(2)
+            legA.value = Math.sqrt(Math.pow(hypo.value,2) - Math.pow(legB.value,2)).toFixed(3)
+          } else {
+            //We have hypo and legA. Use cos to find leg B and angles
+            angA.value = toDegrees(Math.acos(legA.value / hypo.value)).toFixed(2)
+            angB.value = toDegrees(Math.asin(legA.value / hypo.value)).toFixed(2)
+            legB.value = Math.sqrt(Math.pow(hypo.value,2) - Math.pow(legA.value,2)).toFixed(3)
+          }
+		}
 	}
+
+	function toDegrees(radians) {
+        let degrees = (radians * (180 / Math.PI));
+        return degrees;
+	}
+
+	function toRadians(degrees) {
+        let radians = (degrees * (Math.PI / 180));
+        return radians;
+    }
 
     function recalcMillingMRR(event) {
       if (event?.detail?.calculatorEvent &&
@@ -1451,6 +1515,5 @@ function closeModalOnBackdrop(event, modalId) {
       }
     });
   </script>
-
-
-</body></html>
+</body>
+</html>
