@@ -53,7 +53,7 @@
     .page-description {
       font-size: 14px;
       color: #aaa;
-      margin: 2px 0 8px 0;
+      margin: -10px 0 8px 0;
       line-height: 1.4;
     }
 
@@ -139,6 +139,64 @@
       font-weight: bold;
       background: unset;
     }
+	
+	/* Scroll wrapper for small devices */
+	  .table-container {
+		width: 100%;
+		max-height: 500px; /* Optional fixed height with internal scrolling */
+		overflow-x: auto;
+		overflow-y: auto;
+		border: 1px solid #333333;
+		border-radius: 8px;
+		background-color: #1a1a1a;
+	  }
+
+	  /* Core table styling matching dark UI theme */
+	  .tap-table {
+		width: 100%;
+		border-collapse: collapse;
+		font-family: system-ui, -apple-system, sans-serif;
+		font-size: 14px;
+		color: #e0e0e0;
+		text-align: left;
+	  }
+
+	  /* Sticky header when scrolling */
+	  .tap-table thead th {
+		/*width: 16%;*/
+		position: sticky;
+		top: 0;
+		background-color: #252525;
+		color: #4da6ff;
+		font-weight: 600;
+		padding: 12px 16px;
+		border-bottom: 2px solid #333333;
+		z-index: 2;
+	  }
+
+	  .tap-table td {
+		padding: 10px 16px;
+		border-bottom: 1px solid #2a2a2a;
+	  }
+
+	  /* Zebra striping for easy scanning */
+	  .tap-table tbody tr:nth-child(even) {
+		background-color: #202020;
+	  }
+
+	  /* Hover highlight */
+	  .tap-table tbody tr:hover {
+		background-color: #2a3a4e;
+	  }
+
+	  /* Adjust spacing on small phone screens */
+	  @media (max-width: 480px) {
+		.tap-table th, 
+		.tap-table td {
+		  padding: 8px 12px;
+		  font-size: 13px;
+		}
+	  }
 
     /* Hamburger button */
     .menu-button {
@@ -244,7 +302,7 @@
     }
 
     .menu-header {
-      padding: 0 12px 8px;
+      padding: 0 12px 5px;
       color: #888;
       font-size: 13px;
       font-weight: 700;
@@ -255,7 +313,7 @@
     .menu-item {
       width: 100%;
       display: block;
-      padding: 12px;
+      padding: 6px 12px 6px 12px;
       border: none;
       border-radius: 8px;
       background: transparent;
@@ -311,10 +369,10 @@
         bottom: 16px;
       }
 	  input { 
-		width: 80%
+		width: 100%
 	  }
 	  .page-action {
-		width: 80%
+		width: 100%
 	  }
     }
   </style>
@@ -599,6 +657,77 @@
       Calculates the drill-point depth and the total depth needed to obtain the specified straight cylindrical hole depth.
     </div>
   </div>
+  
+	<div id="p-tapping-metric" class="page">
+		<div class="page-title">Thread table - Metric</div>
+		<div class="page-description">For standard 60° metric threads</div>
+		<div class="table-container">
+		  <table class="tap-table">
+			<thead>
+			  <tr>
+				<th style="width: 30%">Size</th>
+				<th>Pitch (mm)</th>
+				<th>Drill (mm)</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <tr><td>M1</td><td>0.25</td><td>0.75</td></tr>
+			  <tr><td>M2</td><td>0.40</td><td>1.60</td></tr>
+			  <tr><td>M3</td><td>0.50</td><td>2.50</td></tr>
+			  <tr><td>M4</td><td>0.70</td><td>3.30</td></tr>
+			  <tr><td>M5</td><td>0.80</td><td>4.20</td></tr>
+			  <tr><td>M6</td><td>1.00</td><td>5.00</td></tr>
+			  <tr><td>M7</td><td>1.00</td><td>6.00</td></tr>
+			  <tr><td>M8</td><td>1.25</td><td>6.80</td></tr>
+			  <tr><td>M9</td><td>1.25</td><td>7.80</td></tr>
+			  <tr><td>M10</td><td>1.50</td><td>8.50</td></tr>
+			  <tr><td>M11</td><td>1.50</td><td>9.50</td></tr>
+			  <tr><td>M12</td><td>1.75</td><td>10.20</td></tr>
+			  <tr><td>M14</td><td>2.00</td><td>12.00</td></tr>
+			  <tr><td>M16</td><td>2.00</td><td>14.00</td></tr>
+			  <tr><td>M18</td><td>2.50</td><td>15.50</td></tr>
+			  <tr><td>M20</td><td>2.50</td><td>17.50</td></tr>
+			  <tr><td>M22</td><td>2.50</td><td>19.50</td></tr>
+			  <tr><td>M24</td><td>3.00</td><td>21.00</td></tr>
+			  <tr><td>M27</td><td>3.00</td><td>24.00</td></tr>
+			  <tr><td>M30</td><td>3.50</td><td>26.50</td></tr>
+			</tbody>
+		  </table>
+		</div>
+	</div>
+  
+	<div id="p-tapping-bsp" class="page">
+		<div class="page-title">Thread table - BSP</div>
+		<div class="page-description">For 55° British Standard Pipe threads</div>
+			<div class="table-container">
+			<table class="tap-table">
+				<thead>
+					<tr>
+						<th>Size</th>
+						<th>TPI</th>
+						<th>Pitch (mm)</th>
+						<th>Drill (mm)</th>
+					</tr>
+				</thead>
+				<tbody>
+				  <tr><td>G1/16"</td><td>28</td><td>0.907</td><td>6.60</td></tr>
+				  <tr><td>G1/8"</td><td>28</td><td>0.907</td><td>8.80</td></tr>
+				  <tr><td>G1/4"</td><td>19</td><td>1.337</td><td>11.80</td></tr>
+				  <tr><td>G3/8"</td><td>19</td><td>1.337</td><td>15.25</td></tr>
+				  <tr><td>G1/2"</td><td>14</td><td>1.814</td><td>19.00</td></tr>
+				  <tr><td>G5/8"</td><td>14</td><td>1.814</td><td>21.00</td></tr>
+				  <tr><td>G3/4"</td><td>14</td><td>1.814</td><td>24.50</td></tr>
+				  <tr><td>G7/8"</td><td>14</td><td>1.814</td><td>28.25</td></tr>
+				  <tr><td>G1"</td><td>11</td><td>2.309</td><td>30.75</td></tr>
+				  <tr><td>G1-1/8"</td><td>11</td><td>2.309</td><td>35.50</td></tr>
+				  <tr><td>G1-1/4"</td><td>11</td><td>2.309</td><td>39.50</td></tr>
+				  <tr><td>G1-1/2"</td><td>11</td><td>2.309</td><td>45.00</td></tr>
+				  <tr><td>G1-3/4"</td><td>11</td><td>2.309</td><td>51.00</td></tr>
+				  <tr><td>G2"</td><td>11</td><td>2.309</td><td>57.00</td></tr>
+				</tbody>
+		  </table>
+		</div>
+	</div>
 
   <!-- Menu -->
   <div id="menuOverlay" class="menu-overlay" onclick="closeMenu()"></div>
@@ -625,6 +754,12 @@
     <div class="menu-section">
       <div class="menu-header">Drilling</div>
       <button class="menu-item" data-ref="p-drill-depth" onclick="switchPage('p-drill-depth')">Drill depth</button>
+    </div>
+	
+	<div class="menu-section">
+      <div class="menu-header">Threads</div>
+      <button class="menu-item" data-ref="p-tapping-metric" onclick="switchPage('p-tapping-metric')">Thread table - Metric</button>
+	  <button class="menu-item" data-ref="p-tapping-bsp" onclick="switchPage('p-tapping-bsp')">Thread table - BSP</button>
     </div>
 	
 	<div class="version-footer">v0.4 - by svemal</div>
