@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en" data-darkreader-proxy-injected="true"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Machining Calculator</title>
@@ -78,7 +76,7 @@
     }
 
     input {
-      width: 80%;
+      width: 100%;
       min-height: 48px;
       background: #1e1e1e;
       border: 1px solid #444;
@@ -282,12 +280,29 @@
       color: #888;
       line-height: 1.5;
     }
+	
+	@keyframes flashUpdate {
+	  0%   { border-color: #444; padding-left: 12px }
+	  50%  { border-color: #4da6ff; padding-left: 20px }
+	  100% { border-color: #444; padding-left: 12px }
+	}
 
-    @media (max-width: 480px) {
+	.flash-updated {
+	  animation: flashUpdate 0.8s ease-in-out;
+	}
+
+	/* applies only for devices with width less than max-width */
+    @media (max-width: 600px) {
       .menu-button {
         right: 16px;
         bottom: 16px;
       }
+	  input { 
+		width: 80%
+	  }
+	  .page-action {
+		width: 80%
+	  }
     }
   </style>
 </head>
@@ -298,7 +313,7 @@
   <!-- SVG Icon Definition for Calculator -->
   <svg style="display: none;">
     <symbol id="icon-calc" viewBox="0 0 24 24">
-      <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5V4h14v16zM7 6h10v4H7V6zm1 6h2v2H8v-2zm0 4h2v2H8v-2zm4-4h2v2h-2v-2zm0 4h2v2h-2v-2zm4-4h2v6h-2v-6z"/>
+      <path d="M19 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H5V4h14v16zM7 6h10v4H7V6zm1 6h2v2H8v-2zm0 4h2v2H8v-2zm4-4h2v2h-2v-2zm0 4h2v2h-2v-2zm4-4h2v6h-2v-6z"></path>
     </symbol>
   </svg>
 
@@ -328,7 +343,7 @@
         <input type="number" data-holds="rpm" id="sp_rpm" placeholder="0" oninput="recalcSpeed('rpm', event)">
       </div>
     </div>
-    <button id="speed-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <button id="speed-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
   </div>
 
   <!-- General: Feed -->
@@ -339,7 +354,7 @@
       <label>Spindle speed (RPM)</label>
       <div class="input-group">
         <input type="number" data-holds="rpm" id="fe_rpm" oninput="recalcFeed('rpm', event)" placeholder="1000">
-        <button type="button" class="calc-btn" onclick="calculate('p-feed','p-speed','feed')" aria-label="Calculate Spindle Speed"><svg><use href="#icon-calc"/></svg></button>
+        <button type="button" class="calc-btn" onclick="calculate('p-feed','p-speed','feed')" aria-label="Calculate Spindle Speed"><svg><use href="#icon-calc"></use></svg></button>
       </div>
     </div>
 
@@ -370,7 +385,7 @@
         <input type="number" data-holds="mmTooth" id="fe_mmtooth" placeholder="0" oninput="recalcFeed('fe_mmtooth', event)">
       </div>
     </div>
-    <button id="feed-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <button id="feed-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
   </div>
 
   <!-- General: Cutting time - Basic -->
@@ -383,7 +398,7 @@
       <label>Feed rate (mm/min)</label>
       <div class="input-group">
         <input type="number" data-holds="mmMin" id="ct_basic_feed" min="0" oninput="recalcCuttingTimeBasic(event)" placeholder="100">
-        <button type="button" class="calc-btn" onclick="calculate('p-cutting-time','p-feed','cutting time')" aria-label="Calculate Feed Rate"><svg><use href="#icon-calc"/></svg></button>
+        <button type="button" class="calc-btn" onclick="calculate('p-cutting-time','p-feed','cutting time')" aria-label="Calculate Feed Rate"><svg><use href="#icon-calc"></use></svg></button>
       </div>
     </div>
 
@@ -404,10 +419,10 @@
     <div class="field">
       <label>Cutting time (hh:mm:ss)</label>
       <div class="input-group">
-        <input type="text" data-holds="cutTime" id="ct_basic_result" placeholder="00:00:00" readonly>
+        <input type="text" data-holds="cutTime" id="ct_basic_result" placeholder="00:00:00" readonly="">
       </div>
     </div>
-    <button id="cutting-time-basic-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <button id="cutting-time-basic-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
   </div>
 
   <!-- Milling: Material Removal Rate -->
@@ -432,17 +447,17 @@
       <label>Feed rate (mm/min)</label>
       <div class="input-group">
         <input type="number" data-holds="mmMin" id="mmr_feed" min="0" oninput="recalcMillingMRR(event)" placeholder="100">
-        <button type="button" class="calc-btn" onclick="calculate('p-milling-mrr','p-feed','material removal rate')" aria-label="Calculate Feed Rate"><svg><use href="#icon-calc"/></svg></button>
+        <button type="button" class="calc-btn" onclick="calculate('p-milling-mrr','p-feed','material removal rate')" aria-label="Calculate Feed Rate"><svg><use href="#icon-calc"></use></svg></button>
       </div>
     </div>
 
     <div class="field">
       <label>Material removal rate (cm³/min)</label>
       <div class="input-group">
-        <input type="number" data-holds="millMRR" id="mill_mrr_result" placeholder="0" readonly>
+        <input type="number" data-holds="millMRR" id="mill_mrr_result" placeholder="0" readonly="">
       </div>
     </div>
-    <button id="milling-mrr-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <button id="milling-mrr-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
   </div>
 
   <!-- Turning: Material Removal Rate -->
@@ -460,7 +475,7 @@
       <label>Cutting speed (m/min)</label>
       <div class="input-group">
         <input type="number" data-holds="mMin" id="tmr_mmin" min="0" oninput="recalcTurningMRR(event)" placeholder="1000">
-        <button type="button" class="calc-btn" onclick="calculate('p-turning-mrr','p-speed','material removal rate')" aria-label="Calculate Spindle Speed"><svg><use href="#icon-calc"/></svg></button>
+        <button type="button" class="calc-btn" onclick="calculate('p-turning-mrr','p-speed','material removal rate')" aria-label="Calculate Spindle Speed"><svg><use href="#icon-calc"></use></svg></button>
       </div>
     </div>
 
@@ -468,17 +483,17 @@
       <label>Feed per revolution (mm/rev)</label>
       <div class="input-group">
         <input type="number" data-holds="mmRev" id="tmr_feed" min="0" oninput="recalcTurningMRR(event)" placeholder="0.2">
-        <button type="button" class="calc-btn" onclick="calculate('p-turning-mrr','p-feed','material removal rate')" aria-label="Calculate Feed per Rev"><svg><use href="#icon-calc"/></svg></button>
+        <button type="button" class="calc-btn" onclick="calculate('p-turning-mrr','p-feed','material removal rate')" aria-label="Calculate Feed per Rev"><svg><use href="#icon-calc"></use></svg></button>
       </div>
     </div>
 
     <div class="field">
       <label>Material removal rate (cm³/min)</label>
       <div class="input-group">
-        <input type="number" data-holds="turnMRR" id="turn_mrr_result" placeholder="0" readonly>
+        <input type="number" data-holds="turnMRR" id="turn_mrr_result" placeholder="0" readonly="">
       </div>
     </div>
-    <button id="turning-mrr-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <button id="turning-mrr-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
   </div>
 
   <!-- Turning: Surface Finish -->
@@ -489,7 +504,7 @@
       <label>Feed per revolution (mm/rev)</label>
       <div class="input-group">
         <input type="number" data-holds="mmRev" id="sf_feed" min="0" oninput="recalcSurfaceFinish(event)" placeholder="0.1">
-        <button type="button" class="calc-btn" onclick="calculate('p-surface-finish','p-feed','surface finish')" aria-label="Calculate Feed per Rev"><svg><use href="#icon-calc"/></svg></button>
+        <button type="button" class="calc-btn" onclick="calculate('p-surface-finish','p-feed','surface finish')" aria-label="Calculate Feed per Rev"><svg><use href="#icon-calc"></use></svg></button>
       </div>
     </div>
 
@@ -503,17 +518,17 @@
     <div class="field">
       <label>Theoretical Ra (µm)</label>
       <div class="input-group">
-        <input type="number" data-holds="surfaceRa" id="sf_ra" placeholder="0" readonly>
+        <input type="number" data-holds="surfaceRa" id="sf_ra" placeholder="0" readonly="">
       </div>
     </div>
 
     <div class="field">
       <label>Theoretical Rmax (µm)</label>
       <div class="input-group">
-        <input type="number" data-holds="surfaceRmax" id="sf_rmax" placeholder="0" readonly>
+        <input type="number" data-holds="surfaceRmax" id="sf_rmax" placeholder="0" readonly="">
       </div>
     </div>
-    <button id="surface-finish-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <button id="surface-finish-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
     <div class="placeholder">
       Based on the ideal geometric surface profile for a turning tool nose radius.
       Actual surface finish can differ due to vibration, tool wear, material, machine condition, and other factors.
@@ -548,25 +563,25 @@
     <div class="field">
       <label>Tip to full diameter (mm)</label>
       <div class="input-group">
-        <input type="number" id="dd_distance" placeholder="0" readonly>
+        <input type="number" id="dd_distance" placeholder="0" readonly="">
       </div>
     </div>
 
     <div class="field">
       <label>If nominal depth is full dia, tip is</label>
       <div class="input-group">
-        <input type="number" id="dd_total_tip" placeholder="0" readonly>
+        <input type="number" id="dd_total_tip" placeholder="0" readonly="">
       </div>
     </div>
 
     <div class="field">
       <label>If Nominal depth is tip, full dia is</label>
       <div class="input-group">
-        <input type="number" id="dd_total_dia" placeholder="0" readonly>
+        <input type="number" id="dd_total_dia" placeholder="0" readonly="">
       </div>
     </div>
 
-    <button id="drill-depth-action" class="page-action" onclick="returnCalc()" hidden type="button">Action</button>
+    <button id="drill-depth-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
     <div class="placeholder">
       Calculates the drill-point depth and the total depth needed to obtain the specified straight cylindrical hole depth.
     </div>
@@ -600,14 +615,7 @@
     </div>
   </aside>
 
-  <button
-    id="menuButton"
-    class="menu-button"
-    type="button"
-    aria-label="Open calculator menu"
-    aria-expanded="false"
-    onclick="toggleMenu()"
-  >
+  <button id="menuButton" class="menu-button" type="button" aria-label="Open calculator menu" aria-expanded="false" onclick="toggleMenu()">
     <span class="hamburger" aria-hidden="true">
       <span></span>
       <span></span>
@@ -754,40 +762,56 @@
       return `${hh}:${mm}:${ss}`;
     }
 
-    function setCalculatedValue(id, value) {
-      const el = document.getElementById(id);
-      if (!el) return;
+	function setCalculatedValue(id, value) {
+	  const el = document.getElementById(id);
+	  if (!el) return;
 
-      const placeholder = el.placeholder.trim();
-      const calculated = String(value).trim();
+	  const placeholder = el.placeholder.trim();
+	  const calculated = String(value).trim();
 
-      let matchesPlaceholder = false;
-      if (calculated.includes(':')) {
-        matchesPlaceholder = (placeholder === calculated);
-      } else {
-        const placeholderNumber = parseFloat(placeholder);
-        const calculatedNumber = parseFloat(calculated);
-        matchesPlaceholder =
-          placeholder !== '' &&
-          Number.isFinite(placeholderNumber) &&
-          Number.isFinite(calculatedNumber) &&
-          placeholderNumber === calculatedNumber;
-      }
+	  let matchesPlaceholder = false;
+	  if (calculated.includes(':')) {
+		matchesPlaceholder = (placeholder === calculated);
+	  } else {
+		const placeholderNumber = parseFloat(placeholder);
+		const calculatedNumber = parseFloat(calculated);
+		matchesPlaceholder =
+		  placeholder !== '' &&
+		  Number.isFinite(placeholderNumber) &&
+		  Number.isFinite(calculatedNumber) &&
+		  placeholderNumber === calculatedNumber;
+	  }
 
-      el.value = matchesPlaceholder ? '' : value;
+	  const newValue = matchesPlaceholder ? '' : value;
 
-      if (el.dataset.holds) {
-        const page = el.closest('.page')?.id;
-        el.dispatchEvent(new CustomEvent('input', {
-          bubbles: true,
-          detail: {
-            calculatorEvent: true,
-            recalculate: false,
-            visitedPages: page ? [page] : []
-          }
-        }));
-      }
-    }
+	  // Only trigger the flash animation if the value actually changed
+	  if (el.value !== newValue && newValue !== '') {
+		el.classList.remove('flash-updated');
+		// Force a browser reflow so the animation restarts smoothly
+		void el.offsetWidth;
+		el.classList.add('flash-updated');
+	  }
+
+	  el.value = newValue;
+
+	  if (el.dataset.holds) {
+		const page = el.closest('.page')?.id;
+		el.dispatchEvent(new CustomEvent('input', {
+		  bubbles: true,
+		  detail: {
+			calculatorEvent: true,
+			recalculate: false,
+			visitedPages: page ? [page] : []
+		  }
+		}));
+	  }
+	}
+	
+	// Force dot as decimal separator ("12,34" -> "12.34")
+	function formatDecimal(val) {
+	  if (val === null || val === undefined || val === '') return '';
+	  return String(val).replace(',', '.');
+	}
 
     function getInputValue(id) {
       const el = document.getElementById(id);
@@ -1021,5 +1045,6 @@
       }
     });
   </script>
-</body>
-</html>
+
+
+</body></html>
