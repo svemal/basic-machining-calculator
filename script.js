@@ -138,6 +138,28 @@ document.addEventListener('input', function(e) {
   });
 });
 
+function updateTrigInputs(event) {
+  const angleInputs = Array.from(document.querySelectorAll('.angle-input'));
+  const sideInputs = Array.from(document.querySelectorAll('.side-input'));
+
+  // 1. Find filled angles
+  const filledAngles = angleInputs.filter(input => input.value.trim() !== '');
+
+  // 2. ENFORCE MAX 1 ANGLE: If 1 angle is filled, lock the other angle inputs
+  angleInputs.forEach(input => {
+    if (filledAngles.length >= 1 && !filledAngles.includes(input)) {
+      input.readOnly = true;
+    } else if (filledAngles.length === 0) {
+      input.readOnly = false; // Unlock angles if the filled angle was deleted
+    }
+  });
+
+  // 3. Clear auto-calculated values when user modifies/deletes an input
+  if (event && event.isTrusted) { // check if user caused event
+    clearCalculatedOutputs(); 
+  }
+}
+
 function formatTime(totalMinutes) {
   if (!Number.isFinite(totalMinutes) || totalMinutes < 0) return '';
 
