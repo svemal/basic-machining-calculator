@@ -1,503 +1,14 @@
-<html lang="en" data-darkreader-proxy-injected="true"><head>
+<!DOCTYPE html>
+<html lang="en" data-darkreader-proxy-injected="true">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Machining Calculator</title>
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 16px;
-      font-family: system-ui, -apple-system, sans-serif;
-      background-color: #121212;
-      color: #e0e0e0;
-      width: 100%;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-      min-height: 100vh;
-    }
-
-    h1 {
-      font-size: 20px;
-      margin: 0 0 24px 0;
-      text-align: center;
-      color: #ffffff;
-    }
-
-    .page {
-      display: none;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .page.active {
-      display: flex;
-    }
-
-    .page-heading {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .page-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #ffffff;
-      margin: 0;
-    }
-
-    .page-description {
-      font-size: 14px;
-      color: #aaa;
-      margin: 0;
-      line-height: 1.4;
-    }
-
-	.input-group label {
-		width: 100px;
-	}
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .input-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-    }
-
-    label {
-      font-size: 14px;
-      color: #aaa;
-    }
-
-    input {
-      width: 100%;
-      min-height: 48px;
-      background: #1e1e1e;
-      border: 1px solid #444;
-      border-radius: 8px;
-      padding: 12px;
-      color: #fff;
-      font-size: 18px;
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #4da6ff;
-    }
-
-    .calc-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 20%;
-      min-height: 48px;
-      background: #1e1e1e;
-      border: 1px solid #444;
-      border-radius: 8px;
-      color: #4da6ff;
-      cursor: pointer;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .calc-btn:active {
-      background: #2a2a2a;
-    }
-
-    .calc-btn svg {
-      width: 22px;
-      height: 22px;
-      fill: currentColor;
-    }
-
-    .page-action {
-      width: 100%;
-      min-height: 48px;
-      margin-top: 20px;
-      border: 1px solid #444;
-      border-radius: 8px;
-      background: #4da6ff;
-      color: #ffffff;
-      font: inherit;
-      font-size: 16px;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .page-action:active {
-      background: #2a2a2a;
-    }
-
-    input[readonly] {
-      color: #4da6ff;
-      font-weight: bold;
-      background: unset;
-    }
-
-	/* Inline alignment for Title & Info Button */
-.page-heading-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0px;
-}
-
-/* Circular Info Button */
-.info-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid #4da6ff;
-  background: transparent;
-  color: #4da6ff;
-  font-family: serif;
-  font-style: italic;
-  font-weight: bold;
-  font-size: 15px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0;
-}
-
-.info-btn:hover, .info-btn:active {
-  background: #4da6ff;
-  color: #121212;
-}
-
-/* Modal Overlay Styling */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(3px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.modal-content {
-  background: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 420px;
-  padding: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  color: #e0e0e0;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  border-bottom: 1px solid #2a2a2a;
-  padding-bottom: 8px;
-}
-
-.modal-header h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #ffffff;
-}
-
-.modal-close {
-  background: none;
-  border: none;
-  color: #aaa;
-  font-size: 24px;
-  cursor: pointer;
-  line-height: 1;
-  padding: 0;
-}
-
-.modal-close:hover {
-  color: #fff;
-}
-
-.modal-body {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.modal-body ul {
-  padding-left: 20px;
-  margin: 8px 0;
-}
-
-.modal-body code {
-  background: #2a2a2a;
-  color: #4da6ff;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 13px;
-}
-
-	/* Scroll wrapper for small devices */
-	  .table-container {
-		width: 100%;
-		max-height: 500px; /* Optional fixed height with internal scrolling */
-		overflow-x: auto;
-		overflow-y: auto;
-		border: 1px solid #333333;
-		border-radius: 8px;
-		background-color: #1a1a1a;
-	  }
-
-	  /* Core table styling matching dark UI theme */
-	  .tap-table {
-		width: 100%;
-		border-collapse: collapse;
-		font-family: system-ui, -apple-system, sans-serif;
-		font-size: 14px;
-		color: #e0e0e0;
-		text-align: left;
-	  }
-
-	  /* Sticky header when scrolling */
-	  .tap-table thead th {
-		/*width: 16%;*/
-		position: sticky;
-		top: 0;
-		background-color: #252525;
-		color: #4da6ff;
-		font-weight: 600;
-		padding: 12px 16px;
-		border-bottom: 2px solid #333333;
-		z-index: 2;
-	  }
-
-	  .tap-table td {
-		padding: 10px 16px;
-		border-bottom: 1px solid #2a2a2a;
-	  }
-
-	  /* Zebra striping for easy scanning */
-	  .tap-table tbody tr:nth-child(even) {
-		background-color: #202020;
-	  }
-
-	  /* Hover highlight */
-	  .tap-table tbody tr:hover {
-		background-color: #2a3a4e;
-	  }
-
-	  /* Adjust spacing on small phone screens */
-	  @media (max-width: 480px) {
-		.tap-table th,
-		.tap-table td {
-		  padding: 8px 12px;
-		  font-size: 13px;
-		}
-	  }
-
-    /* Hamburger button */
-    .menu-button {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      width: 56px;
-      height: 56px;
-      border: none;
-      border-radius: 50%;
-      background: #4da6ff;
-      color: #ffffff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1001;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .menu-button:active {
-      transform: scale(0.96);
-    }
-
-    .hamburger {
-      width: 24px;
-      height: 18px;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .hamburger span {
-      display: block;
-      width: 100%;
-      height: 2px;
-      border-radius: 2px;
-      background: #fff;
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .menu-button.open .hamburger span:nth-child(1) {
-      transform: translateY(8px) rotate(45deg);
-    }
-
-    .menu-button.open .hamburger span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .menu-button.open .hamburger span:nth-child(3) {
-      transform: translateY(-8px) rotate(-45deg);
-    }
-
-    /* Right-side menu */
-    .menu-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.45);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.2s ease, visibility 0.2s ease;
-      z-index: 999;
-    }
-
-    .menu-overlay.open {
-      opacity: 1;
-      visibility: visible;
-    }
-
-	.side-menu {
-	  position: fixed;
-	  top: 0;
-	  right: 0;
-	  width: min(320px, 86vw);
-	  height: 100vh;
-	  height: 100dvh;
-	  padding: 28px 20px 24px; /* Reduced bottom padding */
-	  background: #1b1b1b;
-	  border-left: 1px solid #333;
-	  overflow-y: auto;
-	  transform: translateX(100%);
-	  transition: transform 0.25s ease;
-	  z-index: 1000;
-	  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.35);
-
-	  /* Added Flexbox to push footer to the absolute bottom */
-	  display: flex;
-	  flex-direction: column;
-	}
-
-    .side-menu.open {
-      transform: translateX(0);
-    }
-
-    .menu-section {
-      margin-bottom: 22px;
-    }
-
-    .menu-section:last-child {
-      margin-bottom: 0;
-    }
-
-    .menu-header {
-      padding: 0 12px 5px;
-      color: #888;
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .menu-item {
-      width: 100%;
-      display: block;
-      padding: 8px 12px 8px 12px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: #e0e0e0;
-      text-align: left;
-      font: inherit;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .menu-item:hover,
-    .menu-item.active {
-      background: #2a2a2a;
-      color: #4da6ff;
-    }
-
-    .menu-item:active {
-      background: #333;
-    }
-
-    .placeholder {
-      margin-bottom:50px;
-      padding: 16px;
-      border: 1px dashed #444;
-      border-radius: 8px;
-      color: #888;
-      line-height: 1.5;
-    }
-
-	.version-footer {
-	  margin-top: auto; /* Pushes footer to the bottom of the flex container */
-	  padding-top: 16px;
-	  font-size: 11px;
-	  color: #666666;
-	  border-top: 1px solid #2a2a2a;
-	  user-select: none;
-	}
-
-	@keyframes flashUpdate {
-	  0%   { border-color: #444; padding-left: 12px }
-	  50%  { border-color: #4da6ff; padding-left: 20px }
-	  100% { border-color: #444; padding-left: 12px }
-	}
-
-	.flash-updated {
-	  animation: flashUpdate 0.8s ease-in-out;
-	}
-
-	/* applies only for devices with width less than max-width */
-    @media (max-width: 600px) {
-      .menu-button {
-        right: 16px;
-        bottom: 16px;
-      }
-	  input {
-		width: 100%
-	  }
-	  .page-action {
-		width: 100%
-	  }
-    }
-  </style>
+  <!-- Standard Favicon for Browser Tabs -->
+  <link rel="icon" type="image/png" sizes="32x32" href="image/icon_32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="image/icon_180.png">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
 
@@ -618,63 +129,63 @@
     <button id="cutting-time-basic-action" class="page-action" onclick="returnCalc()" hidden="" type="button">Action</button>
   </div>
 
-    <!-- General: Trigonometry -->
-	<div id="p-trigonometry" class="page">
-		<div class="page-heading-row">
-			<div class="page-heading">
-				<div class="page-title">Trigonometry</div>
-				<div class="page-description">Fill in 2 inputs to calculate</div>
-			</div>
-			<button type="button" class="info-btn" onclick="openModal('trig-info-modal')" aria-label="Information">i</button>
-		</div>
+  <!-- General: Trigonometry -->
+  <div id="p-trigonometry" class="page">
+    <div class="page-heading-row">
+      <div class="page-heading">
+        <div class="page-title">Trigonometry</div>
+        <div class="page-description">Fill in 2 inputs to calculate</div>
+      </div>
+      <button type="button" class="info-btn" onclick="openModal('trig-info-modal')" aria-label="Information">i</button>
+    </div>
 
-		<!-- Right Triangle Diagram -->
-		<div class="trig-diagram-container">
-		  <svg class="trig-svg" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
-			<!-- Triangle Path (C is the 90° right angle at origin [40, 140]) -->
-			<polygon points="40,140 260,140 40,30" fill="none" stroke="#4da6ff" stroke-width="2.5" stroke-linejoin="round" />
+    <!-- Right Triangle Diagram -->
+    <div class="trig-diagram-container">
+      <svg class="trig-svg" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+        <!-- Triangle Path (C is the 90° right angle at origin [40, 140]) -->
+        <polygon points="40,140 260,140 40,30" fill="none" stroke="#4da6ff" stroke-width="2.5" stroke-linejoin="round" />
 
-			<!-- Right Angle Symbol at Corner C -->
-			<path d="M 40,122 L 58,122 L 58,140" fill="none" stroke="#4da6ff" stroke-width="1.5" />
+        <!-- Right Angle Symbol at Corner C -->
+        <path d="M 40,122 L 58,122 L 58,140" fill="none" stroke="#4da6ff" stroke-width="1.5" />
 
-			<!-- Corner Labels (Vertices) -->
-			<text x="24" y="152" fill="#ffffff" font-weight="bold" font-size="15">C</text>
-			<text x="272" y="152" fill="#ffffff" font-weight="bold" font-size="15">B</text>
-			<text x="24" y="24" fill="#ffffff" font-weight="bold" font-size="15">A</text>
+        <!-- Corner Labels (Vertices) -->
+        <text x="24" y="152" fill="#ffffff" font-weight="bold" font-size="15">C</text>
+        <text x="272" y="152" fill="#ffffff" font-weight="bold" font-size="15">B</text>
+        <text x="24" y="24" fill="#ffffff" font-weight="bold" font-size="15">A</text>
 
-			<!-- Side Labels -->
-			<text x="22" y="90" fill="#aaaaaa" font-size="14" text-anchor="end">b</text>
-			<text x="140" y="160" fill="#aaaaaa" font-size="14" text-anchor="middle">a</text>
-			<text x="158" y="78" fill="#aaaaaa" font-size="14" text-anchor="start">c</text>
-		  </svg>
-		</div>
+        <!-- Side Labels -->
+        <text x="22" y="90" fill="#aaaaaa" font-size="14" text-anchor="end">b</text>
+        <text x="140" y="160" fill="#aaaaaa" font-size="14" text-anchor="middle">a</text>
+        <text x="158" y="78" fill="#aaaaaa" font-size="14" text-anchor="start">c</text>
+      </svg>
+    </div>
 
-		<!-- Trigonometry Calculation Inputs -->
-		<div class="input-group">
-		  <label for="trig_a">Side a</label>
-		  <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_a" oninput="recalcTrigonometry(this)" placeholder="4">
-		</div>
+    <!-- Trigonometry Calculation Inputs -->
+    <div class="input-group">
+      <label for="trig_a">Side a</label>
+      <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_a" oninput="recalcTrigonometry(this)" placeholder="4">
+    </div>
 
-		<div class="input-group">
-		  <label for="trig_b">Side b</label>
-		  <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_b" oninput="recalcTrigonometry(this)" placeholder="3">
-		</div>
+    <div class="input-group">
+      <label for="trig_b">Side b</label>
+      <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_b" oninput="recalcTrigonometry(this)" placeholder="3">
+    </div>
 
-		<div class="input-group">
-		  <label for="trig_c">Side c</label>
-		  <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_c" oninput="recalcTrigonometry(this)" placeholder="5">
-		</div>
+    <div class="input-group">
+      <label for="trig_c">Side c</label>
+      <input type="text" inputmode="decimal" class="trigInput trigSide" id="trig_c" oninput="recalcTrigonometry(this)" placeholder="5">
+    </div>
 
-		<div class="input-group">
-		  <label for="trig_angle_a">Angle A (°)</label>
-		  <input type="text" inputmode="decimal" class="trigInput trigAngle" id="trig_angle_a" oninput="recalcTrigonometry(this)" placeholder="60">
-		</div>
+    <div class="input-group">
+      <label for="trig_angle_a">Angle A (°)</label>
+      <input type="text" inputmode="decimal" class="trigInput trigAngle" id="trig_angle_a" oninput="recalcTrigonometry(this)" placeholder="60">
+    </div>
 
-		<div class="input-group">
-		  <label for="trig_angle_b">Angle B (°)</label>
-		  <input type="text" inputmode="decimal" class="trigInput trigAngle" id="trig_angle_b" oninput="recalcTrigonometry(this)" placeholder="30">
-		</div>
-	</div>
+    <div class="input-group">
+      <label for="trig_angle_b">Angle B (°)</label>
+      <input type="text" inputmode="decimal" class="trigInput trigAngle" id="trig_angle_b" oninput="recalcTrigonometry(this)" placeholder="30">
+    </div>
+  </div>
 
   <!-- Milling: Material Removal Rate -->
   <div id="p-milling-mrr" class="page">
@@ -838,81 +349,81 @@
     </div>
   </div>
 
-	<div id="p-tapping-metric" class="page">
-		<div class="page-heading">
-			<div class="page-title">Thread table - Metric</div>
-			<div class="page-description">For standard 60° metric threads</div>
-		</div>
-		<div class="table-container">
-		  <table class="tap-table">
-			<thead>
-			  <tr>
-				<th style="width: 30%">Size</th>
-				<th>Pitch (mm)</th>
-				<th>Drill (mm)</th>
-			  </tr>
-			</thead>
-			<tbody>
-			  <tr><td>M1</td><td>0.25</td><td>0.75</td></tr>
-			  <tr><td>M2</td><td>0.40</td><td>1.60</td></tr>
-			  <tr><td>M3</td><td>0.50</td><td>2.50</td></tr>
-			  <tr><td>M4</td><td>0.70</td><td>3.30</td></tr>
-			  <tr><td>M5</td><td>0.80</td><td>4.20</td></tr>
-			  <tr><td>M6</td><td>1.00</td><td>5.00</td></tr>
-			  <tr><td>M7</td><td>1.00</td><td>6.00</td></tr>
-			  <tr><td>M8</td><td>1.25</td><td>6.80</td></tr>
-			  <tr><td>M9</td><td>1.25</td><td>7.80</td></tr>
-			  <tr><td>M10</td><td>1.50</td><td>8.50</td></tr>
-			  <tr><td>M11</td><td>1.50</td><td>9.50</td></tr>
-			  <tr><td>M12</td><td>1.75</td><td>10.20</td></tr>
-			  <tr><td>M14</td><td>2.00</td><td>12.00</td></tr>
-			  <tr><td>M16</td><td>2.00</td><td>14.00</td></tr>
-			  <tr><td>M18</td><td>2.50</td><td>15.50</td></tr>
-			  <tr><td>M20</td><td>2.50</td><td>17.50</td></tr>
-			  <tr><td>M22</td><td>2.50</td><td>19.50</td></tr>
-			  <tr><td>M24</td><td>3.00</td><td>21.00</td></tr>
-			  <tr><td>M27</td><td>3.00</td><td>24.00</td></tr>
-			  <tr><td>M30</td><td>3.50</td><td>26.50</td></tr>
-			</tbody>
-		  </table>
-		</div>
-	</div>
+  <div id="p-tapping-metric" class="page">
+    <div class="page-heading">
+      <div class="page-title">Thread table - Metric</div>
+      <div class="page-description">For standard 60° metric threads</div>
+    </div>
+    <div class="table-container">
+      <table class="tap-table">
+        <thead>
+          <tr>
+            <th style="width: 30%">Size</th>
+            <th>Pitch (mm)</th>
+            <th>Drill (mm)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>M1</td><td>0.25</td><td>0.75</td></tr>
+          <tr><td>M2</td><td>0.40</td><td>1.60</td></tr>
+          <tr><td>M3</td><td>0.50</td><td>2.50</td></tr>
+          <tr><td>M4</td><td>0.70</td><td>3.30</td></tr>
+          <tr><td>M5</td><td>0.80</td><td>4.20</td></tr>
+          <tr><td>M6</td><td>1.00</td><td>5.00</td></tr>
+          <tr><td>M7</td><td>1.00</td><td>6.00</td></tr>
+          <tr><td>M8</td><td>1.25</td><td>6.80</td></tr>
+          <tr><td>M9</td><td>1.25</td><td>7.80</td></tr>
+          <tr><td>M10</td><td>1.50</td><td>8.50</td></tr>
+          <tr><td>M11</td><td>1.50</td><td>9.50</td></tr>
+          <tr><td>M12</td><td>1.75</td><td>10.20</td></tr>
+          <tr><td>M14</td><td>2.00</td><td>12.00</td></tr>
+          <tr><td>M16</td><td>2.00</td><td>14.00</td></tr>
+          <tr><td>M18</td><td>2.50</td><td>15.50</td></tr>
+          <tr><td>M20</td><td>2.50</td><td>17.50</td></tr>
+          <tr><td>M22</td><td>2.50</td><td>19.50</td></tr>
+          <tr><td>M24</td><td>3.00</td><td>21.00</td></tr>
+          <tr><td>M27</td><td>3.00</td><td>24.00</td></tr>
+          <tr><td>M30</td><td>3.50</td><td>26.50</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-	<div id="p-tapping-bsp" class="page">
-		<div class="page-heading">
-			<div class="page-title">Thread table - BSP</div>
-			<div class="page-description">For 55° British Standard Pipe threads</div>
-		</div>
-		<div class="table-container">
-			<table class="tap-table">
-				<thead>
-					<tr>
-						<th>Size</th>
-						<th>TPI</th>
-						<th>Pitch (mm)</th>
-						<th>Drill (mm)</th>
-					</tr>
-				</thead>
-				<tbody>
-				  <tr><td>G1/16"</td><td>28</td><td>0.907</td><td>6.60</td></tr>
-				  <tr><td>G1/8"</td><td>28</td><td>0.907</td><td>8.80</td></tr>
-				  <tr><td>G1/4"</td><td>19</td><td>1.337</td><td>11.80</td></tr>
-				  <tr><td>G3/8"</td><td>19</td><td>1.337</td><td>15.25</td></tr>
-				  <tr><td>G1/2"</td><td>14</td><td>1.814</td><td>19.00</td></tr>
-				  <tr><td>G5/8"</td><td>14</td><td>1.814</td><td>21.00</td></tr>
-				  <tr><td>G3/4"</td><td>14</td><td>1.814</td><td>24.50</td></tr>
-				  <tr><td>G7/8"</td><td>14</td><td>1.814</td><td>28.25</td></tr>
-				  <tr><td>G1"</td><td>11</td><td>2.309</td><td>30.75</td></tr>
-				  <tr><td>G1-1/8"</td><td>11</td><td>2.309</td><td>35.50</td></tr>
-				  <tr><td>G1-1/4"</td><td>11</td><td>2.309</td><td>39.50</td></tr>
-				  <tr><td>G1-1/2"</td><td>11</td><td>2.309</td><td>45.00</td></tr>
-				  <tr><td>G1-1/2"</td><td>11</td><td>2.309</td><td>45.00</td></tr>
-				  <tr><td>G1-3/4"</td><td>11</td><td>2.309</td><td>51.00</td></tr>
-				  <tr><td>G2"</td><td>11</td><td>2.309</td><td>57.00</td></tr>
-				</tbody>
-		  </table>
-		</div>
-	</div>
+  <div id="p-tapping-bsp" class="page">
+    <div class="page-heading">
+      <div class="page-title">Thread table - BSP</div>
+      <div class="page-description">For 55° British Standard Pipe threads</div>
+    </div>
+    <div class="table-container">
+      <table class="tap-table">
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>TPI</th>
+            <th>Pitch (mm)</th>
+            <th>Drill (mm)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>G1/16"</td><td>28</td><td>0.907</td><td>6.60</td></tr>
+          <tr><td>G1/8"</td><td>28</td><td>0.907</td><td>8.80</td></tr>
+          <tr><td>G1/4"</td><td>19</td><td>1.337</td><td>11.80</td></tr>
+          <tr><td>G3/8"</td><td>19</td><td>1.337</td><td>15.25</td></tr>
+          <tr><td>G1/2"</td><td>14</td><td>1.814</td><td>19.00</td></tr>
+          <tr><td>G5/8"</td><td>14</td><td>1.814</td><td>21.00</td></tr>
+          <tr><td>G3/4"</td><td>14</td><td>1.814</td><td>24.50</td></tr>
+          <tr><td>G7/8"</td><td>14</td><td>1.814</td><td>28.25</td></tr>
+          <tr><td>G1"</td><td>11</td><td>2.309</td><td>30.75</td></tr>
+          <tr><td>G1-1/8"</td><td>11</td><td>2.309</td><td>35.50</td></tr>
+          <tr><td>G1-1/4"</td><td>11</td><td>2.309</td><td>39.50</td></tr>
+          <tr><td>G1-1/2"</td><td>11</td><td>2.309</td><td>45.00</td></tr>
+          <tr><td>G1-1/2"</td><td>11</td><td>2.309</td><td>45.00</td></tr>
+          <tr><td>G1-3/4"</td><td>11</td><td>2.309</td><td>51.00</td></tr>
+          <tr><td>G2"</td><td>11</td><td>2.309</td><td>57.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
   <!-- Menu -->
   <div id="menuOverlay" class="menu-overlay" onclick="closeMenu()"></div>
@@ -942,13 +453,13 @@
       <button class="menu-item" data-ref="p-drill-depth" onclick="switchPage('p-drill-depth')">Drill depth</button>
     </div>
 
-	<div class="menu-section">
+    <div class="menu-section">
       <div class="menu-header">Threads</div>
       <button class="menu-item" data-ref="p-tapping-metric" onclick="switchPage('p-tapping-metric')">Thread table - Metric</button>
-	  <button class="menu-item" data-ref="p-tapping-bsp" onclick="switchPage('p-tapping-bsp')">Thread table - BSP</button>
+      <button class="menu-item" data-ref="p-tapping-bsp" onclick="switchPage('p-tapping-bsp')">Thread table - BSP</button>
     </div>
 
-	<div class="version-footer">v0.4 - by svemal</div>
+    <div class="version-footer">v0.4 - by svemal</div>
   </aside>
 
   <button id="menuButton" class="menu-button" type="button" aria-label="Open calculator menu" aria-expanded="false" onclick="toggleMenu()">
@@ -959,561 +470,26 @@
     </span>
   </button>
 
-  <!-- Modal Overlay (Can be placed at bottom of <body>) -->
-	<div id="trig-info-modal" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'trig-info-modal')">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h3>Trigonometry Info</h3>
-		  <button class="modal-close" onclick="closeModal('trig-info-modal')">&times;</button>
-		</div>
-		<div class="modal-body">
-		  <p>Enter any two values (sides or angles) to calculate the remaining unknown sides and angles of a right-angled triangle.</p>
-		  <p><strong>Formulas:</strong></p>
-		  <ul>
-			<li><code>a² + b² = c²</code> (Pythagorean theorem)</li>
-			<li><code>sin(∠°) = Opposite/Hypotenuse</code></li>
-			<li><code>cos(∠°) = Adjacent/Hypotenuse</code></li>
-			<li><code>tan(∠°) = Opposite/Adjacent</code></li>
-		  </ul>
-		</div>
-	  </div>
-	</div>
-
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById('sideMenu');
-      const overlay = document.getElementById('menuOverlay');
-      const button = document.getElementById('menuButton');
-
-      const isOpen = menu.classList.toggle('open');
-      overlay.classList.toggle('open', isOpen);
-      button.classList.toggle('open', isOpen);
-      button.setAttribute('aria-expanded', isOpen);
-      button.setAttribute('aria-label', isOpen ? 'Close calculator menu' : 'Open calculator menu');
-    }
-
-    function closeMenu() {
-      const menu = document.getElementById('sideMenu');
-      const overlay = document.getElementById('menuOverlay');
-      const button = document.getElementById('menuButton');
-
-      menu.classList.remove('open');
-      overlay.classList.remove('open');
-      button.classList.remove('open');
-      button.setAttribute('aria-expanded', 'false');
-      button.setAttribute('aria-label', 'Open calculator menu');
-    }
-
-    function switchPage(pageId, auto = false) {
-      const current = document.querySelector(".page.active").id;
-      if (current === pageId) {
-        closeMenu();
-        return;
-      } else if (!auto) {
-        document.querySelectorAll(".page-action").forEach(btn => btn.hidden = true);
-        document.querySelector("#data").dataset.calltree = "[]";
-      }
-
-      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      document.querySelectorAll('.menu-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.ref === pageId);
-      });
-
-      document.getElementById(pageId).classList.add('active');
-      closeMenu();
-    }
-
-    function calculate(caller, target, str) {
-      let dataElement = document.querySelector("#data");
-      let tempArr = JSON.parse(dataElement.dataset.calltree);
-      tempArr.push(JSON.stringify({ caller, target, text: str }));
-      dataElement.dataset.calltree = JSON.stringify(tempArr);
-
-      document.querySelectorAll(".page-action").forEach(btn => {
-        btn.hidden = false;
-        btn.innerText = `Return to ${str}`;
-      });
-
-      switchPage(target, true);
-    }
-
-    function returnCalc() {
-      let dataElement = document.querySelector("#data");
-      let tempArr = JSON.parse(dataElement.dataset.calltree);
-      if (tempArr.length === 0) return;
-
-      let lastEntry = JSON.parse(tempArr.pop());
-      dataElement.dataset.calltree = JSON.stringify(tempArr);
-
-      switchPage(lastEntry.caller, true);
-
-      let pageActions = document.querySelectorAll(".page-action");
-      let remainingEntry = tempArr.at(-1);
-
-      if (!remainingEntry) {
-        pageActions.forEach(btn => btn.hidden = true);
-      } else {
-        let parsed = JSON.parse(remainingEntry);
-        pageActions.forEach(btn => {
-          btn.hidden = false;
-          btn.innerText = `Return to ${parsed.text}`;
-        });
-      }
-    }
-
-	function openModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) modal.classList.add('active');
-}
-
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) modal.classList.remove('active');
-}
-
-// Closes modal if user clicks outside the modal content box
-function closeModalOnBackdrop(event, modalId) {
-  if (event.target.id === modalId) {
-    closeModal(modalId);
-  }
-}
-
-    /* Automatic data-holds field synchronization */
-    document.addEventListener('input', function(e) {
-      const key = e.target.dataset.holds;
-      if (!key) return;
-
-      const value = e.target.value;
-      const sourcePage = e.target.closest('.page')?.id;
-
-      const detail = e.detail?.calculatorEvent ? e.detail : null;
-      const visitedPages = Array.isArray(detail?.visitedPages)
-        ? detail.visitedPages
-        : (sourcePage ? [sourcePage] : []);
-
-      const matchingInputs =
-        document.querySelectorAll(`input[data-holds="${key}"]`);
-
-      matchingInputs.forEach(input => {
-        if (input === e.target) return;
-        if (input.value === value) return;
-
-        input.value = value;
-
-        const targetPage = input.closest('.page')?.id;
-        const alreadyVisited =
-          targetPage && visitedPages.includes(targetPage);
-
-        const nextVisitedPages =
-          targetPage && !alreadyVisited
-            ? [...visitedPages, targetPage]
-            : visitedPages;
-
-        input.dispatchEvent(new CustomEvent('input', {
-          bubbles: false,
-          detail: {
-            calculatorEvent: true,
-            recalculate: !alreadyVisited,
-            visitedPages: nextVisitedPages
-          }
-        }));
-      });
-    });
-
-    function formatTime(totalMinutes) {
-      if (!Number.isFinite(totalMinutes) || totalMinutes < 0) return '';
-
-      const totalSeconds = Math.round(totalMinutes * 60);
-      const hours = Math.floor(totalSeconds / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-
-      const hh = String(hours).padStart(2, '0');
-      const mm = String(minutes).padStart(2, '0');
-      const ss = String(seconds).padStart(2, '0');
-
-      return `${hh}:${mm}:${ss}`;
-    }
-
-	function setCalculatedValue(id, value) {
-	  const el = document.getElementById(id);
-	  if (!el) return;
-
-	  const placeholder = el.placeholder.trim();
-	  const calculated = String(value).trim();
-
-	  let matchesPlaceholder = false;
-	  if (calculated.includes(':')) {
-		matchesPlaceholder = (placeholder === calculated);
-	  } else {
-		const placeholderNumber = parseFloat(placeholder);
-		const calculatedNumber = parseFloat(calculated);
-		matchesPlaceholder =
-		  placeholder !== '' &&
-		  Number.isFinite(placeholderNumber) &&
-		  Number.isFinite(calculatedNumber) &&
-		  placeholderNumber === calculatedNumber;
-	  }
-
-	  const newValue = matchesPlaceholder ? '' : value;
-
-	  // Only trigger the flash animation if the value actually changed
-	  if (el.value !== newValue && newValue !== '') {
-		el.classList.remove('flash-updated');
-		// Force a browser reflow so the animation restarts smoothly
-		void el.offsetWidth;
-		el.classList.add('flash-updated');
-	  }
-
-	  el.value = newValue;
-
-	  if (el.dataset.holds) {
-		const page = el.closest('.page')?.id;
-		el.dispatchEvent(new CustomEvent('input', {
-		  bubbles: true,
-		  detail: {
-			calculatorEvent: true,
-			recalculate: false,
-			visitedPages: page ? [page] : []
-		  }
-		}));
-	  }
-	}
-
-	// Force dot as decimal separator ("12,34" -> "12.34")
-	function formatDecimal(val) {
-	  if (val === null || val === undefined || val === '') return '';
-	  return String(val).replace(',', '.');
-	}
-
-    function getInputValue(id) {
-      const el = document.getElementById(id);
-      if (!el) return NaN;
-      const value = el.value.trim();
-      const fallback = el.placeholder;
-      const number = parseFloat(value !== '' ? value : fallback);
-      return Number.isNaN(number) ? NaN : number;
-    }
-
-    function syncValue(element) {
-      const key = element.dataset.holds;
-      if (!key) return;
-      document.querySelectorAll(`input[data-holds="${key}"]`).forEach(input => {
-        if (input !== element && input.value !== element.value) {
-          input.value = element.value;
-          input.dispatchEvent(new Event('input', { bubbles: false }));
-        }
-      });
-    }
-
-    function recalcSpeed(source, event) {
-      if (event?.detail?.calculatorEvent &&
-          event.detail.recalculate === false) return;
-
-      const dia = getInputValue('sp_dia');
-      const mMin = getInputValue('sp_mmin');
-      const rpm = getInputValue('sp_rpm');
-
-      if (source === 'dia' || source === 'mmin') {
-        if (Number.isFinite(dia) && Number.isFinite(mMin) && dia !== 0) {
-          setCalculatedValue(
-            'sp_rpm',
-            (1000 * mMin / (Math.PI * dia)).toFixed(0)
-          );
-        }
-      } else if (source === 'rpm') {
-        if (Number.isFinite(dia) && Number.isFinite(rpm)) {
-          setCalculatedValue(
-            'sp_mmin',
-            (Math.PI * dia * rpm / 1000).toFixed(0)
-          );
-        }
-      }
-    }
-
-    function recalcFeed(source, event) {
-      if (event?.detail?.calculatorEvent &&
-          event.detail.recalculate === false) return;
-
-      const rpm = getInputValue('fe_rpm');
-      const mmMin = getInputValue('fe_mmmin');
-      let mmRev = getInputValue('fe_mmrev');
-      const teeth = getInputValue('fe_teeth');
-      const mmTooth = getInputValue('fe_mmtooth');
-
-      if (source === 'rpm') {
-        if (Number.isFinite(rpm) && Number.isFinite(mmRev)) {
-          setCalculatedValue('fe_mmmin', (rpm * mmRev).toFixed(0));
-        }
-      } else if (source === 'mmmin') {
-        if (Number.isFinite(mmMin) && Number.isFinite(rpm) && rpm !== 0) {
-          const calcMmRev = mmMin / rpm;
-          setCalculatedValue('fe_mmrev', calcMmRev.toFixed(3));
-          if (Number.isFinite(teeth) && teeth !== 0) {
-            setCalculatedValue('fe_mmtooth', (calcMmRev / teeth).toFixed(3));
-          }
-        }
-      } else if (source === 'mmrev') {
-        if (Number.isFinite(mmRev) && Number.isFinite(rpm)) {
-          setCalculatedValue('fe_mmmin', (rpm * mmRev).toFixed(0));
-        }
-        if (Number.isFinite(mmRev) && Number.isFinite(teeth) && teeth !== 0) {
-          setCalculatedValue('fe_mmtooth', (mmRev / teeth).toFixed(3));
-        }
-      } else if (source === 'fe_mmtooth') {
-        if (Number.isFinite(mmTooth) && Number.isFinite(teeth)) {
-          const calcMmRev = mmTooth * teeth;
-          setCalculatedValue('fe_mmrev', calcMmRev.toFixed(3));
-          if (Number.isFinite(rpm)) {
-            setCalculatedValue('fe_mmmin', (rpm * calcMmRev).toFixed(0));
-          }
-        }
-      } else if (source === 'fe_teeth') {
-        if (Number.isFinite(mmTooth) && Number.isFinite(teeth)) {
-          const calcMmRev = mmTooth * teeth;
-          setCalculatedValue('fe_mmrev', calcMmRev.toFixed(3));
-          if (Number.isFinite(rpm)) {
-            setCalculatedValue('fe_mmmin', (rpm * calcMmRev).toFixed(0));
-          }
-        } else if (Number.isFinite(mmRev) && Number.isFinite(teeth) && teeth !== 0) {
-          setCalculatedValue('fe_mmtooth', (mmRev / teeth).toFixed(3));
-        }
-      }
-
-      // Keep downstream dependents (e.g. cutting time basic) updated
-      recalcCuttingTimeBasic();
-    }
-
-    function recalcCuttingTimeBasic(event) {
-      if (event?.detail?.calculatorEvent &&
-          event.detail.recalculate === false) return;
-
-      const feed = getInputValue('ct_basic_feed');
-      const length = getInputValue('ct_basic_length');
-      const passes = getInputValue('ct_basic_passes');
-      const result = document.getElementById('ct_basic_result');
-
-      if (Number.isFinite(feed) && Number.isFinite(length) &&
-          Number.isFinite(passes) && feed > 0) {
-        const timeInMinutes = (length * passes) / feed;
-        setCalculatedValue('ct_basic_result', formatTime(timeInMinutes));
-      } else {
-        result.value = '';
-      }
-    }
-
-	function recalcTrigonometry(input) {
-		//1. add userValue-class if user input a value. Remove if user cleared value
-		if (input.value != '') {
-			input.classList.add("userValue");
-		} else {
-			input.classList.remove("userValue");
-		}
-
-		let outputs = [];
-
-		//2. Get all trigonometry inputs. If 2 has userValue tag, make rest readonly
-		const allInputs = document.querySelectorAll(".trigInput");
-		const allSides = document.querySelectorAll(".trigSide");
-        const allAngles = document.querySelectorAll(".trigAngle");
-
-		let userValues = document.querySelectorAll(".userValue");
-		if (userValues.length == 1 && input.classList.contains("trigAngle")) {
-            for (let i = 0; i < allAngles.length; i++) {
-              if (allAngles[i].id != input.id) {
-                allAngles[i].readOnly = true;
-              }
-            }
-		} else if (userValues.length == 2) {
-			for (let i = 0; i < allInputs.length; i++) {
-				if (allInputs[i].classList.contains("userValue") == false) {
-					//store as an output
-					outputs.push(allInputs[i]);
-                    //not user input. Set readonly
-					allInputs[i].readOnly = true;
-				}
-			}
-		} else {
-			for (let i = 0; i < allInputs.length; i++) {
-				//Inadequate user inputs. Remove readonly
-				if (allInputs[i].readOnly) { allInputs[i].value = '' }
-				allInputs[i].readOnly = false;
-			}
-		}
-
-		//3. UI has been handled. Sort all inputs and outputs.
-		if (outputs.length == 0) {
-          return; //Inadequate amount of values
-		}
-		//if 1 angle was entered, calculate second angle
-		const legA = document.querySelector("#trig_a");
-        const legB = document.querySelector("#trig_b");
-        const hypo = document.querySelector("#trig_c");
-        const angA = document.querySelector("#trig_angle_a");
-        const angB = document.querySelector("#trig_angle_b");
-
-		if (document.querySelector(".trigAngle.userValue") != null) {
-            //1 angle given, find the remaining
-            let secondAngle = 90 - document.querySelector(".trigAngle.userValue").value;
-            document.querySelector(".trigAngle[readonly]").value = secondAngle;
-
-            //we now have all angles and 1 side
-            if (legA.classList.contains("userValue")) { //legA was given value
-              legB.value = (legA.value * Math.tan(toRadians(angB.value))).toFixed(3)
-              hypo.value = (legA.value / Math.cos(toRadians(angB.value))).toFixed(3)
-            } else if (legB.classList.contains("userValue")) { //legB was given value
-              legA.value = (legB.value * Math.tan(toRadians(angA.value))).toFixed(3)
-              hypo.value = (legB.value / Math.cos(toRadians(angA.value))).toFixed(3)
-            } else { //hypotenuse was given value
-              legA.value = (hypo.value * Math.sin(toRadians(angA.value))).toFixed(3)
-              legB.value = (hypo.value * Math.sin(toRadians(angB.value))).toFixed(3)
-            }
-		} else {
-          //no angle was entered
-          if (hypo.readOnly) {
-            //We have both legs, use tan to find and an angle
-            angA.value = toDegrees(Math.atan(legA.value / legB.value)).toFixed(2)
-            angB.value = toDegrees(Math.atan(legB.value / legA.value)).toFixed(2)
-            hypo.value = Math.sqrt(Math.pow(legA.value,2) + Math.pow(legB.value,2)).toFixed(3)
-          } else if (legA.readOnly) {
-            //We have hypo and legB. Use cos to find leg A and angles
-            angA.value = toDegrees(Math.acos(legB.value / hypo.value)).toFixed(2)
-            angB.value = toDegrees(Math.asin(legB.value / hypo.value)).toFixed(2)
-            legA.value = Math.sqrt(Math.pow(hypo.value,2) - Math.pow(legB.value,2)).toFixed(3)
-          } else {
-            //We have hypo and legA. Use cos to find leg B and angles
-            angA.value = toDegrees(Math.acos(legA.value / hypo.value)).toFixed(2)
-            angB.value = toDegrees(Math.asin(legA.value / hypo.value)).toFixed(2)
-            legB.value = Math.sqrt(Math.pow(hypo.value,2) - Math.pow(legA.value,2)).toFixed(3)
-          }
-		}
-	}
-
-	function toDegrees(radians) {
-        let degrees = (radians * (180 / Math.PI));
-        return degrees;
-	}
-
-	function toRadians(degrees) {
-        let radians = (degrees * (Math.PI / 180));
-        return radians;
-    }
-
-    function recalcMillingMRR(event) {
-      if (event?.detail?.calculatorEvent &&
-          event.detail.recalculate === false) return;
-
-      const width = getInputValue('mmr_width');
-      const depth = getInputValue('mmr_depth');
-      const feed = getInputValue('mmr_feed');
-      const result = document.getElementById('mill_mrr_result');
-
-      if (Number.isFinite(width) && Number.isFinite(depth) &&
-          Number.isFinite(feed)) {
-        // mm³/min -> cm³/min
-        setCalculatedValue('mill_mrr_result', (width * depth * feed / 1000).toFixed(1));
-      } else {
-        result.value = '';
-      }
-    }
-
-    function recalcTurningMRR(event) {
-      if (event?.detail?.calculatorEvent &&
-          event.detail.recalculate === false) return;
-
-      const ap = getInputValue('tmr_ap');
-      const speed = getInputValue('tmr_mmin');
-      const feed = getInputValue('tmr_feed');
-      const result = document.getElementById('turn_mrr_result');
-
-      if (Number.isFinite(ap) && Number.isFinite(speed) &&
-          Number.isFinite(feed)) {
-        // ap (mm) * feed (mm/rev) * speed (m/min) yields cm³/min directly.
-        setCalculatedValue('turn_mrr_result', (ap * feed * speed).toFixed(1));
-      } else {
-        result.value = '';
-      }
-    }
-
-    function recalcSurfaceFinish(event) {
-      if (event?.detail?.calculatorEvent &&
-          event.detail.recalculate === false) return;
-
-      const feed = getInputValue('sf_feed');
-      const radius = getInputValue('sf_radius');
-      const ra = document.getElementById('sf_ra');
-      const rmax = document.getElementById('sf_rmax');
-
-      if (Number.isFinite(feed) && Number.isFinite(radius) && radius > 0) {
-        // Geometric turning formulas, converted from mm to µm.
-        setCalculatedValue('sf_ra', (feed * feed / (32 * radius) * 1000).toFixed(2));
-        setCalculatedValue('sf_rmax', (feed * feed / (8 * radius) * 1000).toFixed(2));
-      } else {
-        ra.value = '';
-        rmax.value = '';
-      }
-    }
-
-    function recalcDrillDepth(event) {
-      if (event?.detail?.calculatorEvent &&
-          event.detail.recalculate === false) return;
-
-      const diameter = getInputValue('dd_diameter');
-      const angle = getInputValue('dd_angle');
-      const nominal = getInputValue('dd_nominal');
-
-      const distance = document.getElementById('dd_distance');
-      const totalTip = document.getElementById('dd_total_tip');
-      const totalDia = document.getElementById('dd_total_dia');
-
-      if (Number.isFinite(diameter) && Number.isFinite(angle) &&
-          Number.isFinite(nominal) && diameter >= 0 && angle > 0 && angle < 180) {
-        const tipDistance =
-          (diameter / 2) / Math.tan((angle / 2) * Math.PI / 180);
-
-        setCalculatedValue('dd_distance', tipDistance.toFixed(2));
-        setCalculatedValue('dd_total_tip', (nominal + tipDistance).toFixed(2));
-        setCalculatedValue('dd_total_dia', (nominal - tipDistance).toFixed(2));
-      } else {
-        distance.value = '';
-        totalTip.value = '';
-        totalDia.value = '';
-      }
-    }
-
-    // Event registration for Cutting Time section to catch cross-tab syncs
-    document.querySelectorAll('#p-cutting-time input').forEach(input => {
-      input.addEventListener('input', recalcCuttingTimeBasic);
-    });
-
-    // Initialize calculated fields
-    recalcCuttingTimeBasic();
-    recalcMillingMRR();
-    recalcTurningMRR();
-    recalcSurfaceFinish();
-    recalcDrillDepth();
-
-    // Select the current numeric value when the user focuses/clicks an input.
-    document.addEventListener('focusin', function(event) {
-      const input = event.target;
-      if (input.matches('input') && input.value !== '') {
-        requestAnimationFrame(() => input.select());
-      }
-    });
-
-    document.addEventListener('click', function(event) {
-      const input = event.target;
-      if (input.matches('input') && input.value !== '') {
-        requestAnimationFrame(() => input.select());
-      }
-    });
-
-    // Close menu with Escape key
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
-        closeMenu();
-      }
-    });
-  </script>
+  <!-- Modal Overlay -->
+  <div id="trig-info-modal" class="modal-overlay" onclick="closeModalOnBackdrop(event, 'trig-info-modal')">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Trigonometry Info</h3>
+        <button class="modal-close" onclick="closeModal('trig-info-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Enter any two values (sides or angles) to calculate the remaining unknown sides and angles of a right-angled triangle.</p>
+        <p><strong>Formulas:</strong></p>
+        <ul>
+          <li><code>a² + b² = c²</code> (Pythagorean theorem)</li>
+          <li><code>sin(∠°) = Opposite/Hypotenuse</code></li>
+          <li><code>cos(∠°) = Adjacent/Hypotenuse</code></li>
+          <li><code>tan(∠°) = Opposite/Adjacent</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
